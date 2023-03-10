@@ -1,24 +1,32 @@
 import wikipedia
 import requests
 import json
+import warnings
+from bs4 import GuessedAtParserWarning
 
 
-def get_wiki_image(search_term):
-    WIKI_REQUEST = 'http://en.wikipedia.org/w/api.php?action=query&prop=pageimages&format=json&piprop=original&titles='
+
+def get_wiki_image(search_term,lang='en'):
+    WIKI_REQUEST = 'http://'+lang+'.wikipedia.org/w/api.php?action=query&prop=pageimages&format=json&piprop=original&titles='
     try:
-        result = wikipedia.search(search_term, results = 1)
-        wikipedia.set_lang('en')
-        wkpage = wikipedia.WikipediaPage(title = result[0])
-        title = wkpage.title
-        response  = requests.get(WIKI_REQUEST+title)
-        json_data = json.loads(response.text)
-        img_link = list(json_data['query']['pages'].values())[0]['original']['source']
-        return img_link        
+        results = wikipedia.search(search_term)
+        for result in results:
+            wikipedia.set_lang('en')
+            try:
+                page = wikipedia.page(title=result,auto_suggest=False)
+                title = page.title
+                response  = requests.get(WIKI_REQUEST+title)
+                json_data = json.loads(response.text)
+                img_link = list(json_data['query']['pages'].values())[0]['original']['source']
+                return str(img_link),title
+            except:
+                pass
+        return 0  
     except:
         return 0
 
 
-import requests # request img from web
+import requests 
 import urllib.request
 import mimetypes
 
@@ -34,8 +42,6 @@ def getExtension(filename):
 def downloadImage(url,file_name):
     extension = getExtension(url)
     file_name+=extension
-    # url = input('Please enter an image URL (string):') #prompt user for img url
-    # file_name = input('Save image as (string):') #prompt user for file_name
     res = requests.get(url, stream = True)
     if res.status_code == 200 or res.status_code == 403:
         opener=urllib.request.build_opener()
@@ -47,8 +53,9 @@ def downloadImage(url,file_name):
 
 
 def downloadWikiImage(search_term):
-    wiki_image_url = str(get_wiki_image(search_term))
-    downloadImage(wiki_image_url,'images/'+search_term)
+    wiki_image_url,name = get_wiki_image(search_term)
+    downloadImage(wiki_image_url,'images/'+name)
         
 
-downloadWikiImage("Rennes")
+warnings.filterwarnings('ignore', category=GuessedAtParserWarning) # Pour cacher les warnings liés à certains parsing
+downloadWikiImage("PNG")
