@@ -1,0 +1,9 @@
+#Install rapidly all the required libraries with
+# pip install -r requirements.txt
+pandas
+pytrends
+google-search-results
+
+wikipedia
+requests
+json
