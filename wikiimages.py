@@ -48,14 +48,17 @@ def downloadImage(url,file_name):
         opener.addheaders=[('User-Agent','Mozilla/5.0 (Windows NT 6.1; WOW64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/36.0.1941.0 Safari/537.36')]
         urllib.request.install_opener(opener)
         img = urllib.request.urlretrieve(url,file_name)
-
+        return file_name
     return res.status_code
 
 
-def downloadWikiImage(search_term):
+def downloadWikiImage(search_term,destdir='images/',nospace=False):
     wiki_image_url,name = get_wiki_image(search_term)
-    downloadImage(wiki_image_url,'images/'+name)
+    if nospace:
+        name = name.replace(" ","_")
+    return downloadImage(wiki_image_url,destdir+name)
+    
         
 
-warnings.filterwarnings('ignore', category=GuessedAtParserWarning) # Pour cacher les warnings liés à certains parsing
-downloadWikiImage("PNG")
+# warnings.filterwarnings('ignore', category=GuessedAtParserWarning) # Pour cacher les warnings liés à certains parsing
+# downloadWikiImage("Thomas Pesquet",destdir='web/images/',nospace=True)

@@ -7,3 +7,5 @@ google-search-results
 wikipedia
 requests
 bs4
+
+eel
