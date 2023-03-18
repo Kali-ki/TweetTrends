@@ -9,3 +9,6 @@ requests
 bs4
 
 eel
+
+rembg
+Pillow

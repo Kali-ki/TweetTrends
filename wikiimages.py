@@ -1,12 +1,10 @@
 import wikipedia
 import requests
 import json
-import warnings
-from bs4 import GuessedAtParserWarning
 
 
 
-def get_wiki_image(search_term,lang='en'):
+def get_wiki_image_link(search_term,lang='en'):
     WIKI_REQUEST = 'http://'+lang+'.wikipedia.org/w/api.php?action=query&prop=pageimages&format=json&piprop=original&titles='
     try:
         results = wikipedia.search(search_term)
@@ -29,6 +27,7 @@ def get_wiki_image(search_term,lang='en'):
 import requests 
 import urllib.request
 import mimetypes
+from PIL import Image
 
 def getExtension(filename):
     contentType, _ = mimetypes.guess_type(filename)
@@ -39,26 +38,26 @@ def getExtension(filename):
     elif(contentType=="image/gif"):return ".gif"
     else : return ""
 
-def downloadImage(url,file_name):
+def loadImage(url,file_name,save=True):
     extension = getExtension(url)
     file_name+=extension
     res = requests.get(url, stream = True)
     if res.status_code == 200 or res.status_code == 403:
         opener=urllib.request.build_opener()
         opener.addheaders=[('User-Agent','Mozilla/5.0 (Windows NT 6.1; WOW64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/36.0.1941.0 Safari/537.36')]
-        urllib.request.install_opener(opener)
-        img = urllib.request.urlretrieve(url,file_name)
-        return file_name
+        if(save):name,http =  urllib.request.urlretrieve(url,file_name)
+        else: name,http =  urllib.request.urlretrieve(url)
+        img = Image.open(name)
+        return file_name,img
     return res.status_code
 
 
-def downloadWikiImage(search_term,destdir='images/',nospace=False):
-    wiki_image_url,name = get_wiki_image(search_term)
+def loadWikiImage(search_term,destdir='images/',nospace=False):
+    wiki_image_url,name = get_wiki_image_link(search_term)
     if nospace:
         name = name.replace(" ","_")
-    return downloadImage(wiki_image_url,destdir+name)
+    return loadImage(wiki_image_url,destdir+name,False)
     
         
 
-# warnings.filterwarnings('ignore', category=GuessedAtParserWarning) # Pour cacher les warnings liés à certains parsing
-# downloadWikiImage("Thomas Pesquet",destdir='web/images/',nospace=True)
+# loadWikiImage("Thomas Pesquet",destdir='web/images/',nospace=True)
