@@ -8,11 +8,15 @@ images = []
 
 
 for search in search_terms:
-    imagefullname,img = wikiimages.loadWikiImage(search_term=search,destdir='images/',nospace=True)
-    sp= imagefullname.split('/')[-1].split('.')
-    imagename = sp[0]+'.'+sp[1]
-    imgname = imagetreating.rembg(img,"web/images/"+sp[0])
-    images.append(sp[0]+".png")
+    sucess,imagefullname,img = wikiimages.loadWikiImage(search_term=search,destdir='images/',nospace=True)
+    if not sucess:
+        print("Image de "+search+" non chargée")
+    else :
+        sp= imagefullname.split('/')[-1].split('.')
+        imagename = sp[0]+'.'+sp[1]
+        imgname = imagetreating.rembg(img,"web/images/"+sp[0])
+        images.append(sp[0]+".png")
+        print("Image de "+search+" ("+sp[0]+")"+" chargée")
 
 notloadedimages =images.copy()
 
