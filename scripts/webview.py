@@ -2,6 +2,7 @@ import eel
 import wikiimages
 import os.path
 import imagetreating
+import gimages
 
 search_terms = ["Thomas Pesquet","Ada Lovelace","Antoine Dupont","Linus Torvalds","Gerard Depardieu"]
 images = []
@@ -11,6 +12,7 @@ for search in search_terms:
     sucess,imagefullname,img = wikiimages.loadWikiImage(search_term=search,destdir='images/',nospace=True)
     if not sucess:
         print("Image de "+search+" non chargée")
+        #gimages.loadGoogleImage(search)
     else :
         sp= imagefullname.split('/')[-1].split('.')
         imagename = sp[0]+'.'+sp[1]
