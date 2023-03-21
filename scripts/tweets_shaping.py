@@ -2,7 +2,7 @@ import numpy as np
 import pandas as pd
 
 # Read JSON file with pandas
-tweets = pd.read_json('tweet_dataset.json', lines=True)
+tweets = pd.read_json('../data/tweet_dataset.json', lines=True)
 
 # Get only "rawdata" part
 tweets = tweets['raw_value']
