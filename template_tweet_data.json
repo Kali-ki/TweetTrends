@@ -1,0 +1,41 @@
+{
+    "object_type": "TweetRaw",
+    "download_datetime": "2023-03-17T14:43:22.769922+01:00",
+    "raw_value": 
+    {
+        "created_at": "Sun Feb 07 17:00:01 +0000 2010",
+        "id": 8770663072,
+        "id_str": "8770663072",
+        "full_text": "In Deutschland/24h: 1.#wetter, 2.#fb, 3.#DWD, 4.#fail, 5.#Hamburg",
+        "truncated": false,
+        "display_text_range": [0, 65],
+        "entities": {
+            "hashtags": [
+                {"text": "wetter", "indices": [22, 29]},
+                {"text": "fb", "indices": [33, 36]},
+                {"text": "DWD", "indices": [40, 44]},
+                {"text": "fail", "indices": [48, 53]},
+                {"text": "Hamburg", "indices": [57, 65]}
+            ],
+            "symbols": [], "user_mentions": [], "urls": []},
+            "source": "<a href=\"http://twitter.com\" rel=\"nofollow\">Twitter Web Client</a>",
+            "in_reply_to_status_id": null,
+            "in_reply_to_status_id_str": null,
+            "in_reply_to_user_id": null, "in_reply_to_user_id_str": null,
+            "in_reply_to_screen_name": null,
+            "user_id": 111699877, "user_id_str": "111699877",
+            "geo": null, "coordinates": null,
+            "place": null, "contributors": null,
+            "is_quote_status": false,
+            "retweet_count": 0,
+            "favorite_count": 0,
+            "reply_count": 0,
+            "quote_count": 0,
+            "conversation_id": 8770663072,
+            "conversation_id_str": "8770663072",
+            "favorited": false,
+            "retweeted": false,
+            "lang": "de",
+            "supplemental_language": null
+    }
+}
