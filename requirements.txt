@@ -6,4 +6,9 @@ google-search-results
 
 wikipedia
 requests
-json
+bs4
+
+eel
+
+rembg
+Pillow
