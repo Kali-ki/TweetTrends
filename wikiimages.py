@@ -4,12 +4,12 @@ import json
 
 
 
-def get_wiki_image_link(search_term,lang='en'):
+def get_wiki_image_link(search_term,lang='fr'):
     WIKI_REQUEST = 'http://'+lang+'.wikipedia.org/w/api.php?action=query&prop=pageimages&format=json&piprop=original&titles='
     try:
+        wikipedia.set_lang(lang)
         results = wikipedia.search(search_term)
         for result in results:
-            wikipedia.set_lang('en')
             try:
                 page = wikipedia.page(title=result,auto_suggest=False)
                 title = page.title
@@ -19,9 +19,9 @@ def get_wiki_image_link(search_term,lang='en'):
                 return str(img_link),title
             except:
                 pass
-        return 0  
+        return False,None
     except:
-        return 0
+        return False,None
 
 
 import requests 
@@ -45,19 +45,23 @@ def loadImage(url,file_name,save=True):
     if res.status_code == 200 or res.status_code == 403:
         opener=urllib.request.build_opener()
         opener.addheaders=[('User-Agent','Mozilla/5.0 (Windows NT 6.1; WOW64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/36.0.1941.0 Safari/537.36')]
+        urllib.request.install_opener(opener)
         if(save):name,http =  urllib.request.urlretrieve(url,file_name)
         else: name,http =  urllib.request.urlretrieve(url)
         img = Image.open(name)
-        return file_name,img
-    return res.status_code
+        return True,file_name,img
+    return False,None,None
 
 
-def loadWikiImage(search_term,destdir='images/',nospace=False):
-    wiki_image_url,name = get_wiki_image_link(search_term)
-    if nospace:
+def loadWikiImage(search_term,destdir='images/',nospace=False,save=False,lang='en'):
+    wiki_image_url,name = get_wiki_image_link(search_term,lang)
+    if wiki_image_url==False:
+        return False,None,None
+    if nospace: #On enlève les underscore (cela peut être à l'origine d'erreurs)
         name = name.replace(" ","_")
-    return loadImage(wiki_image_url,destdir+name,False)
+    return loadImage(wiki_image_url,destdir+name,save)
     
         
-
-# loadWikiImage("Thomas Pesquet",destdir='web/images/',nospace=True)
+# sucss,_,img = loadWikiImage("Thomas Pesquet",destdir='web/images/',nospace=True)
+# if sucss :img.show()
+# else :print("Pas d'image")
