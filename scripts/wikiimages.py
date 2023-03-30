@@ -2,6 +2,8 @@ import wikipedia
 import requests
 import json
 
+from PIL import Image
+import imageloader
 
 
 def get_wiki_image_link(search_term,lang='fr'):
@@ -24,20 +26,13 @@ def get_wiki_image_link(search_term,lang='fr'):
         return False,None
 
 
-import requests 
-from PIL import Image
-import imageloader
-
-
 def loadWikiImage(search_term,destdir='images/',nospace=False,save=False,lang='en'):
     wiki_image_url,name = get_wiki_image_link(search_term,lang)
     if wiki_image_url==False:
         return False,None,None
-    if nospace: #On enlève les underscore (cela peut être à l'origine d'erreurs)
-        name = name.replace(" ","_")
-    return imageloader.loadImage(wiki_image_url,destdir+name,save)
+    return imageloader.loadImage(wiki_image_url,destdir+name,save,nospace)
     
         
-# sucss,_,img = loadWikiImage("Thomas Pesquet",destdir='web/images/',nospace=True)
-# if sucss :img.show()
-# else :print("Pas d'image")
+sucss,_,img = loadWikiImage("Arothron meleagris",save=False,lang='fr')
+if sucss :img.show()
+else :print("Pas d'image")

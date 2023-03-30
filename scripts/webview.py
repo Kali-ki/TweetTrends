@@ -8,6 +8,7 @@ def createImages(search_terms):
     images = []
     for search in search_terms:
         sucess,imagefullname,img = wikiimages.loadWikiImage(search_term=search,destdir='images/',nospace=True)
+        print(imagefullname)
         if not sucess:
             print("Image de "+search+" non chargée")
             #gimages.loadGoogleImage(search)
