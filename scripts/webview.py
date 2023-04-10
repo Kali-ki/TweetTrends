@@ -40,5 +40,5 @@ def view(search_terms):
 
     eel.start('index.html')
 
-search_terms = ["Thomas Pesquet","Ada Lovelace","Antoine Dupont","Linus Torvalds","Gerard Depardieu"]
+search_terms = ["Planète Mars","Jupiter","Lune"]#["Thomas Pesquet","Ada Lovelace","Antoine Dupont","Linus Torvalds","Gerard Depardieu"]
 view(search_terms)
