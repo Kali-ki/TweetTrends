@@ -37,8 +37,8 @@ def getImageGoogleImage(imagesearchresults,index=0):
         img.show()
     else :print("Pas d'image")
 
-f = open('data/apple_imagesearch.json')
-d = json.load(f)
+# f = open('data/apple_imagesearch.json')
+# d = json.load(f)
 
 # for i in range(12,len(d)):
 # getImageGoogleImage(d)
@@ -47,3 +47,22 @@ d = json.load(f)
 # def loadGoogleImage(search,lang='fr'):
     
 #loadGoogleImage()
+#MY API KEY AIzaSyBuztOh8AWOHQY6PZxF9w0FxauqvE0xsjo
+#MY SEARCH ENGINE 956978fab341a4ef5
+
+
+import requests
+from google_images_search import GoogleImagesSearch
+
+def searchImageWithGoogleAPI(search):
+    API_KEY = 'AIzaSyBuztOh8AWOHQY6PZxF9w0FxauqvE0xsjo'
+    SEARCH_ENGINE_ID = '956978fab341a4ef5'
+    query = search
+    gis = GoogleImagesSearch(API_KEY, SEARCH_ENGINE_ID)
+
+    gis.search({'q': search})
+
+    print(gis.results())
+
+
+searchImageWithGoogleAPI('Mario')
