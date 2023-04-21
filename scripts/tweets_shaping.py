@@ -22,7 +22,7 @@ df_tweets_ = df_tweets_["raw_value"]
 df_tweets = pd.DataFrame()
 
 # Create a list of keys to extract
-keys = ["created_at", "full_text", "entities", "lang"]
+keys = ["created_at", "entities", "lang"]
 # Extract the keys and add them to the dataframe
 for key in keys :
     df_tweets[key] = df_tweets_.apply(parse, kw = key)
