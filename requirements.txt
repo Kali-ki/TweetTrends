@@ -6,9 +6,10 @@ google-search-results
 
 wikipedia
 requests
-bs4
 
 eel
 
 rembg
 Pillow
+arrow
+stweet==2.1.1
