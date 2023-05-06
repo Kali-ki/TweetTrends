@@ -10,7 +10,7 @@ class WikiParser(ImageParser):
 
 def _get_wiki_image_link(search,lang='fr'):
     """
-    Recherche un lien viable pour charger une image représentative du mot clé recherché
+    Recherche un lien viable pour charger une image wikipedia représentative du mot clé recherché
     """
     wikipedia.set_lang(lang)
     results = wikipedia.search(search, results = 3)

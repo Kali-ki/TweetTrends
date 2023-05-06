@@ -5,6 +5,7 @@ import imagelib
 from imagelib import ImageParser
 import glob
 from wikiparser import WikiParser
+from gimageserpapiparser import GImageSerpApiParser
 
 UI_FOLDER='web'
 
@@ -53,11 +54,15 @@ def _updateLoadedImages( urls: list[str]):
 
 def _updateKeywords():
     #TODO: interact with tweeter (by example) to find keywords fitting to a period
-    return ["griezmann","vincent collet","Lune"]
+    return ["griezmann","vincent collet","mario"]
     
 
-def _findImageLinks(parser : ImageParser,keywords:list[str]):
-    return [parser.getImageLink(keyword) for keyword in keywords]
+def _findImageLinks(parser : ImageParser,keywordsurls:dict[str,str]):
+    for keyword in keywordsurls:
+        url = keywordsurls[keyword]
+        if len(url)==0: # the url has not been found yet
+            keywordsurls[keyword] = parser.getImageLink(keyword)
+    return keywordsurls
    
 
 def startui():
@@ -67,8 +72,13 @@ def startui():
    eel.init(UI_FOLDER)  
    @eel.expose
    def loadImagesPy():
-    ip = WikiParser
-    _updateLoadedImages(_findImageLinks(ip,_updateKeywords()))
+    wikip = WikiParser
+    gisp = GImageSerpApiParser
+    keywords = _updateKeywords()
+    keywords_url = {key: '' for key in keywords}
+    keywords_url= _findImageLinks(wikip,keywords_url)
+    keywords_url= _findImageLinks(gisp,keywords_url)
+    _updateLoadedImages(list(keywords_url.values()))
     eel.loadImagesJs(os.listdir( UI_FOLDER+'/images'))
     print(os.listdir( UI_FOLDER+'/images'))
    eel.start('index.html',close_callback=_deleteUIfolder,size=(700,700))
@@ -79,7 +89,7 @@ def _initHTMLCSSJSFiles():
     head = '<title>Projet DE</title><link rel="stylesheet" href="style.css"><script type="text/javascript" src="/eel.js"></script><script type="text/javascript" src="script.js"></script>'
     body = '<button id="refresh" onclick="refresh()">Charger les images</button><div id="images"></div>'
     _createHTMLFile(UI_FOLDER+'/index.html',head,body)
-    body = 'body{background:orange;color:white}; images{width:50;}'
+    body = 'body{background:orange;color:white;}\n img{height:100px;}'
     _createCSSFile(UI_FOLDER+'/style.css',body)
     body = "eel.expose(loadImagesJs);\n\
         function loadImagesJs(imagesnames) { ;\n\
