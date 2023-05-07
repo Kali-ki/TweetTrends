@@ -6,22 +6,11 @@ from imagelib import ImageParser
 import glob
 from wikiparser import WikiParser
 from gimageserpapiparser import GImageSerpApiParser
+import shutil
+
 
 UI_FOLDER='web'
 
-
-def _createHTMLFile(filename='index.html',head='<title>First Page</title>',body='<h1>Hello, World</h1>'):
-    with open(filename,"w") as htmlfile:
-        htmlfile.write(f"<html>\n<head>{head}\n</head> <body>{body} \n</body></html>")
-
-
-def _createCSSFile(filename='style.css',content="body{background:yellow;color:white}"):
-    with open(filename,"w") as cssfile:
-        cssfile.write(content)
-
-def _createJSFile(filename='script.js',content='console.log("Hello, World")'):
-    with open(filename,"w") as jsfile:
-        jsfile.write(content)
 
 def _createImagesFolder():
     os.mkdir(UI_FOLDER+'/images')
@@ -34,6 +23,7 @@ def _deleteUIfolder(_,__):
 def saveImage(url : str,imagename=None,background=False):
     """
     loads and saves an image from an url in the UI_FOLDER
+    background indicates the presence of background
     """
     img = imagelib.loadimage(url)
     if not background : img = imagelib.rembg(img)
@@ -42,20 +32,60 @@ def saveImage(url : str,imagename=None,background=False):
         # we convert automatically the image in png if the bh is removed
         if not background: sp[1]='png'
         imagename = sp[0].replace('%','_') +'.'+sp[1]
-    imagelib.saveImage(img,UI_FOLDER+"/images/"+imagename)
+    path = UI_FOLDER+"/images/"+imagename
+    imagelib.saveImage(img,path)
+    while(not os.path.exists(path)):pass
+    print(path)
+    return imagename
+    
 
-def _updateLoadedImages( urls: list[str]):
-    '''
-    Resets the images folder content and loads all the new images in it
-    '''
-    for f in glob.glob(UI_FOLDER+"/images/*"):os.remove(f)
-    for url in urls:
-        if(len(url)>0): saveImage(url)
 
-def _updateKeywords():
+def _updateKeywords(period):
     #TODO: interact with tweeter (by example) to find keywords fitting to a period
     return ["griezmann","vincent collet","mario"]
     
+def _initPeriods():
+    #TODO: load all available periods on init 
+    return ["Decembre 2020", "Janvier 2021","Fevrier 2021"]
+
+def _initHTMLCSSJSFiles():
+    indexlines = []
+    # read the template
+    with open('../uitemplate.html', 'r') as template:
+        for line in template:
+            if '<!--datestopropose-->' in line:
+                # create dropdown list containing all the available periods
+                for period in _initPeriods():
+                    name = period.replace(' ','-').lower()
+                    option = f'<option value="{name}">{period}</value>'
+                    indexlines.append(option)
+            else :  indexlines.append(line.strip())
+
+    # write the ui file
+    with open(UI_FOLDER+"/index.html", 'w') as fileindex:
+        fileindex.write('\n'.join(indexlines))
+
+
+def startui():
+   if not os.path.exists(UI_FOLDER): os.mkdir(UI_FOLDER)
+   _initHTMLCSSJSFiles()
+   _createImagesFolder()
+   eel.init(UI_FOLDER)  
+
+   @eel.expose
+   def loadPeriodPy(periodid):
+    '''
+    Applies changes on the UI, according to a new period selection by the user
+    The keywords of the periods are retreived
+    The  illustration images are downloaded and their background are removed
+    '''
+    wikip = WikiParser
+    gisp = GImageSerpApiParser
+    keywords = _updateKeywords(periodid)
+    eel.loadPeriodJs(_illustrate_keywords(keywords,[wikip, gisp]))
+
+   eel.start('index.html',close_callback=_deleteUIfolder,size=(700,700))
+
 
 def _findImageLinks(parser : ImageParser,keywordsurls:dict[str,str]):
     for keyword in keywordsurls:
@@ -63,39 +93,22 @@ def _findImageLinks(parser : ImageParser,keywordsurls:dict[str,str]):
         if len(url)==0: # the url has not been found yet
             keywordsurls[keyword] = parser.getImageLink(keyword)
     return keywordsurls
-   
 
-def startui():
-   if not os.path.exists(UI_FOLDER): os.mkdir(UI_FOLDER)
-   _initHTMLCSSJSFiles()
-   _createImagesFolder()
-   eel.init(UI_FOLDER)  
-   @eel.expose
-   def loadImagesPy():
-    wikip = WikiParser
-    gisp = GImageSerpApiParser
-    keywords = _updateKeywords()
+def _illustrate_keywords(keywords : list[str],parsers : list[ImageParser]):
     keywords_url = {key: '' for key in keywords}
-    keywords_url= _findImageLinks(wikip,keywords_url)
-    keywords_url= _findImageLinks(gisp,keywords_url)
-    _updateLoadedImages(list(keywords_url.values()))
-    eel.loadImagesJs(os.listdir( UI_FOLDER+'/images'))
-    print(os.listdir( UI_FOLDER+'/images'))
-   eel.start('index.html',close_callback=_deleteUIfolder,size=(700,700))
-   
-
-
-def _initHTMLCSSJSFiles():
-    head = '<title>Projet DE</title><link rel="stylesheet" href="style.css"><script type="text/javascript" src="/eel.js"></script><script type="text/javascript" src="script.js"></script>'
-    body = '<button id="refresh" onclick="refresh()">Charger les images</button><div id="images"></div>'
-    _createHTMLFile(UI_FOLDER+'/index.html',head,body)
-    body = 'body{background:orange;color:white;}\n img{height:100px;}'
-    _createCSSFile(UI_FOLDER+'/style.css',body)
-    body = "eel.expose(loadImagesJs);\n\
-        function loadImagesJs(imagesnames) { ;\n\
-        document.getElementById('images').innerHTML='';\n\
-        for(let name of imagesnames){\n\
-            document.getElementById('images').innerHTML+='<img src=images/'+name+' >'\n\
-        };} \n\
-        function refresh(){eel.loadImagesPy()}";
-    _createJSFile(UI_FOLDER+'/script.js',content=body)
+    for parser in parsers:
+        keywords_url = _findImageLinks(parser,keywords_url)
+    
+    #Resets the images folder content and loads all the new images in it
+    for f in glob.glob(UI_FOLDER+"/images/*"):os.remove(f)
+    keywords_infos = []
+    for keyword in list(keywords_url.keys()):
+         url = keywords_url[keyword]
+         illustration = saveImage(url) 
+         keywords_infos.append({
+             "keyword":keyword,
+             "url":url,
+             "illustration":illustration
+         })
+    eel.reload()
+    return keywords_infos
