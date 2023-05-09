@@ -13,27 +13,38 @@ UI_FOLDER='web'
 
 
 def _createImagesFolder():
-    os.mkdir(UI_FOLDER+'/images')
+    if not os.path.exists(UI_FOLDER+"/images"):  os.mkdir(UI_FOLDER+'/images')
 
 def _deleteUIfolder(_,__):
     if os.path.exists(UI_FOLDER):shutil.rmtree(UI_FOLDER)
     exit()
+
+def _imagenameformat(url,imagename=None,background=False):
+    '''
+    returns the appropriate name for an image to save
+    '''
+    sp= imagelib.imageNameFromUrl(url)
+    if imagename: sp[0]=imagename
+    imagename.replace('%','_').replace(' ','_') #file name cannot have '%' in their names
+    # we convert automatically the image in png if the bg is removed
+    if not background: sp[1]='png'
+    imagename = sp[0]+'.'+sp[1]
+    return imagename
 
 
 def saveImage(url : str,imagename=None,background=False):
     """
     loads and saves an image from an url in the UI_FOLDER
     background indicates the presence of background
+    imagename is a name of image (without its format)
     """
     img = imagelib.loadimage(url)
-    if not background : img = imagelib.rembg(img)
-    if not imagename : 
-        sp= imagelib.imageNameFromUrl(url)
-        # we convert automatically the image in png if the bh is removed
-        if not background: sp[1]='png'
-        imagename = sp[0].replace('%','_') +'.'+sp[1]
+    if not background : 
+        img = imagelib.rembg(img)
+    imagename = _imagenameformat(url,imagename,background)
     path = UI_FOLDER+"/images/"+imagename
     imagelib.saveImage(img,path)
+    #waits for the images to be loaded
     while(not os.path.exists(path)):pass
     print(path)
     return imagename
@@ -88,6 +99,9 @@ def startui():
 
 
 def _findImageLinks(parser : ImageParser,keywordsurls:dict[str,str]):
+    '''
+    tries to illustrate (find an url) the maximum of keywords with the given parser
+    '''
     for keyword in keywordsurls:
         url = keywordsurls[keyword]
         if len(url)==0: # the url has not been found yet
@@ -95,20 +109,27 @@ def _findImageLinks(parser : ImageParser,keywordsurls:dict[str,str]):
     return keywordsurls
 
 def _illustrate_keywords(keywords : list[str],parsers : list[ImageParser]):
+    '''
+    tries to illustrate the maximum of keywords with the parsers.
+    returns a list of     objects with the shape :  
+    { keyword,  url, illustration} indicating all the illustrated keywords.
+    url and illustration can be empty strings if the parsers failed to find an illustration.
+    '''
     keywords_url = {key: '' for key in keywords}
     for parser in parsers:
         keywords_url = _findImageLinks(parser,keywords_url)
     
     #Resets the images folder content and loads all the new images in it
-    for f in glob.glob(UI_FOLDER+"/images/*"):os.remove(f)
+    # for f in glob.glob(UI_FOLDER+"/images/*"):os.remove(f)
     keywords_infos = []
     for keyword in list(keywords_url.keys()):
          url = keywords_url[keyword]
-         illustration = saveImage(url) 
+         illustration =  _imagenameformat(url,keyword)
+         if not os.path.exists(UI_FOLDER+'/images/'+ illustration): 
+             saveImage(url,keyword) 
          keywords_infos.append({
              "keyword":keyword,
              "url":url,
              "illustration":illustration
          })
-    eel.reload()
     return keywords_infos
