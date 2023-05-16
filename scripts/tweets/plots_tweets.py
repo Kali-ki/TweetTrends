@@ -3,6 +3,7 @@
 # Can also search hashtags and plot their evolution.
 # -------------------------------------------------------------------------------------------------
 
+import os
 import pandas as pd
 import matplotlib.pyplot as plt
 import ast
@@ -10,9 +11,9 @@ import ast
 # --- Parameters ----------------------------------------------------------------------------------
 
 # NUMBER_TWEETS_TO_KEEP most popular hashtags
-NUMBER_TWEETS_TO_KEEP = 1 # Keep at 0 to disable
+NUMBER_TWEETS_TO_KEEP = 10 # Keep at 0 to disable
 # Search for the NUMBER_TWEETS_TO_KEEP hashtags
-SEARCHED_HASHTAGS = ["POUTINE", "HOLLANDE"] # Keep empty to disable
+SEARCHED_HASHTAGS = ["POUTINE"] # Keep empty to disable
 
 FR_ONLY = True
 
@@ -77,8 +78,11 @@ def convert_hashtags_to_list(df_tweets_hashtags):
 
 # --- Main ----------------------------------------------------------------------------------------
 
+# Path to the tweets CSV file
+path = os.path.join(os.path.dirname(__file__), '../../data/tweets/tweets.csv')
+
 # Read CSV file with pandas
-df_tweets = pd.read_csv('../../data/tweets/tweets.csv')
+df_tweets = pd.read_csv(path)
 
 if(FR_ONLY):
     # Keep only tweets with lang='fr'
@@ -157,7 +161,9 @@ plt.title("Evolution of the most popular hashtags through the years")
 plt.xlabel("Year")
 plt.ylabel("Number of occurences")
 
+# Path to the tweets CSV file
+path = os.path.join(os.path.dirname(__file__), '../../images/hashtags_evolution.png')
 # Save the figure
-plt.savefig("../../images/hashtags_evolution.png")
+plt.savefig(path)
 
 plt.show()
