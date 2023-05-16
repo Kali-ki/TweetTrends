@@ -1,13 +1,23 @@
-# DE
-# Requirements
-use Python 3.10
-## Organisation
+# Data engineering project
 
-## Exécuter
-pyhton app.py
+Kilian CORNEC & Léo FILOCHE
 
+## Description
 
-idée : 
-- indiquer stats des mots clés
-(plot)
-- en ligne de commande, indiquer si l'on veut supprimer les dossiers des images (--reset-images), ou tout le dossier --reset-all, ou activer la suppression de l'ui à sa fermeture : --autodelete
+This project is a data engineering project.
+
+The development of this project has been split into 2 parts :
+
+- Scrap the tweets and process them to get the most used hashtags by year
+- Scrap images to illustrate the hashtags
+
+## Execution
+
+### Requirements
+
+- Python 3
+- requirements.txt
+
+## Launch the project
+
+> python app.py
