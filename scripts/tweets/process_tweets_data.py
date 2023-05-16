@@ -6,7 +6,7 @@ def generate_link(hashtag, year):
     return link
 
 # Read CSV file with pandas
-df_tweets = pd.read_csv('../data/tweets.csv')
+df_tweets = pd.read_csv('../../data/tweets.csv')
 
 # Keep only tweets with lang='fr'
 df_tweets = df_tweets[df_tweets["lang"] == "fr"]
@@ -83,4 +83,4 @@ for i in range(number_of_years+1):
     df_hashtags = pd.concat([df_hashtags, df_hashtags_year_i, series_link], axis = 1)
 
 # Save the dataframe to a csv file
-df_hashtags.to_csv("../data/most_used_hashtags.csv", index = False)
+df_hashtags.to_csv("../../data/most_used_hashtags.csv", index = False)
