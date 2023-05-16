@@ -1,6 +1,15 @@
-#Install rapidly all the required libraries with
+# Install rapidly all the required libraries with
 # pip install -r requirements.txt
+
+# --- General -------------------------------------------------------------------------------------
+
 pandas
+
+# --- Tweets --------------------------------------------------------------------------------------
+
+stweet==2.1.1 # For twitter scraping
+arrow==1.2.3 # For date manipulation
+
 pytrends
 google-search-results
 windows-curses
@@ -12,5 +21,3 @@ eel
 
 rembg
 Pillow
-arrow
-stweet==2.1.1
