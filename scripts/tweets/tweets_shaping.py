@@ -1,3 +1,8 @@
+#--------------------------------------------------------------------------------------------------
+# Description: This script is used to shape the tweets dataset (json)
+# into a CSV file with the following columns : created_at, hashtags.
+# -------------------------------------------------------------------------------------------------
+
 import pandas as pd
 
 # Function to parse elements of a tweet
@@ -13,7 +18,7 @@ def parse_hashtags(list_hashtags):
     return res
 
 # Read JSON file with pandas
-df_tweets_ = pd.read_json('../../data/tweet_dataset.json')
+df_tweets_ = pd.read_json('../../data/tweets/tweet_dataset.json')
 
 # Select only the raw_value column
 df_tweets_ = df_tweets_["raw_value"]
@@ -36,4 +41,4 @@ df_tweets["hashtags"] = df_tweets_hashtags.apply(parse_hashtags)
 df_tweets.drop(columns = ["entities"], inplace = True)
 
 # Save the dataframe as a CSV file
-df_tweets.to_csv('../../data/tweets.csv', index = False)
+df_tweets.to_csv('../../data/tweets/tweets.csv', index = False)

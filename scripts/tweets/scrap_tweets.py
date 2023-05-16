@@ -1,6 +1,12 @@
+#--------------------------------------------------------------------------------------------------
+# Description: This script is used to scrap tweets from TopHashtags user.
+# Scraping is done by day, from 2010-01-01 to 2022-01-01.
+# --------------------------------------------------------------------------------------------------
+
 import stweet as st
 import arrow
 
+# Search tweets from a user, between two dates, and only original tweets (no responses).
 def try_search(username, date_start, date_end, filter=st.RepliesFilter.ONLY_ORIGINAL):
     search_tweets_task = st.SearchTweetsTask(from_username=username, since=date_start, until=date_end, replies_filter=filter)
     output_jl_tweets = st.JsonLineFileRawOutput('output_raw_search_tweets.jl')

@@ -1,12 +1,19 @@
+#--------------------------------------------------------------------------------------------------
+# Description: This script processes the tweets data from tweets.csv
+# and generates a CSV file with the most popular hashtags for each year,
+# the "score" and a context link.
+#--------------------------------------------------------------------------------------------------
+
 import pandas as pd
 import ast
 
+# Function to generate the link to the Twitter search
 def generate_link(hashtag, year):
     link = "https://twitter.com/search?q=(%23" + hashtag + ")%20lang%3Afr%20until%3A" + year + "-12-31%20since%3A" + year + "-01-01&src=typed_query"
     return link
 
 # Read CSV file with pandas
-df_tweets = pd.read_csv('../../data/tweets.csv')
+df_tweets = pd.read_csv('../../data/tweets/tweets.csv')
 
 # Keep only tweets with lang='fr'
 df_tweets = df_tweets[df_tweets["lang"] == "fr"]
@@ -83,4 +90,4 @@ for i in range(number_of_years+1):
     df_hashtags = pd.concat([df_hashtags, df_hashtags_year_i, series_link], axis = 1)
 
 # Save the dataframe to a csv file
-df_hashtags.to_csv("../../data/most_used_hashtags.csv", index = False)
+df_hashtags.to_csv("../../data/tweets/most_used_hashtags.csv", index = False)
