@@ -26,6 +26,8 @@ TODO
 
 ## Development
 
+> To get more details about the scripts, you can go to the [scripts](scripts) folder. All the scripts are documented.
+
 ### 📕 Data source
 
 The first step was to find a source for Twitter data. For that, we use all the tweets of the Twitter user [TopHashtags](https://twitter.com/TopHashtags). This user has tweeted the most used hashtags approximately about every day since 2010.
@@ -51,11 +53,19 @@ Finaly, we used a project inspired by Twint called [Stweet](https://github.com/m
 At this step, we had a big JSON file with all the tweets and a plenty of useless informations. So, we needed to clean all of this with a Python script : [tweets_shapping](scripts/tweets/tweets_shaping.py)
 On this script, thank's to Pandas, we removed all the useless informations and we kept only the hashtags and the date of the tweet. Then, we saved the result in a CSV file : [tweets.csv](data/tweets/tweets.csv).
 
+Output :
+
+![CSV](assets/csv_1.png)
+
 ### 🎯 Data processing
 
 Now, we had a CSV file with all the hashtags and the date of the tweet. But, we needed to count the number of occurences of each hashtags for each year. As before, we used a Python script : [process_tweets_data](scripts/tweets/process_tweets_data.py)
 
 This script is a bit more complex than the previous one. In input, we have the csv file [tweets.csv](data/tweets/tweets.csv), and in output, we have another CSV file but this one only has the hashtags, the numbers of occurences per year and a link to an advanced Twitter search with the hashtag and the year. This way, we can see tweets to get more informations about the hashtag.
+
+Output :
+
+![CSV](assets/csv_2.png)
 
 ### 💎 Data visualization
 
@@ -68,7 +78,9 @@ The next step is to visualize the data. To do that, we used a Python script : [p
 - The date range to visualize
 - If we want to get only french hashtags (hashtags with french context)
 
-In output, thanks to Matplotlib and Pandas, we get a graph with the evolution of the hashtags over the years.
+In output, thanks to Matplotlib and Pandas, we get a graph with the evolution of the hashtags over the years : 
+
+![Graph](assets/plot_example.png)
 
 ## Structure of the project
 
@@ -87,7 +99,6 @@ In output, thanks to Matplotlib and Pandas, we get a graph with the evolution of
 ┃ ┃ ┗ 📜 plots_tweets.py
 ┃ ┃ ┗ 📜 scrap_tweets.py
 ┗ 📜 .gitignore
-┗ 📜 ProjectDescription.pdf
 ┗ 📜 README.md
 ┗ 📜 requirements.md
 ```
@@ -97,6 +108,8 @@ In output, thanks to Matplotlib and Pandas, we get a graph with the evolution of
 ### 🚫 Limitations
 
 The project has one big limitations : the data source. Indeed, we used the tweets of the Twitter user [TopHashtags](https://twitter.com/TopHashtags). And as said previously, there are a few drawbacks and limitations to this method.
+
+Except this, the project has not been really limited by anything else.
 
 ### 🚧 Improvements
 
