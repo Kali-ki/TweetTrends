@@ -1,4 +1,4 @@
-# Data engineering project
+# TweetTrends
 
 Kilian CORNEC & Léo FILOCHE
 
