@@ -18,6 +18,7 @@
             display: flex;
             flex-wrap: wrap;
             align-items: center;
+            gap: 2em;
         }
         .image-selector {
             display: none;
@@ -35,6 +36,8 @@
     <select name="periods" id="periods">
         <!--datestopropose-->
       </select>
+      <input type="checkbox" id="crop-check" checked>
+      <label>Supprimer arrière-plan</label>
       <div id="keywordslist">
 
       </div>
@@ -52,6 +55,7 @@
         function loadPeriodJs(keywords) {
             let el = document.getElementById('keywordslist');
             el.innerHTML = '';
+            el.hidden=true;
             for(let keyword of keywords){
                 let id = keyword.split(" ").join("-");
                 const vignette = document.createElement('div');
@@ -61,42 +65,23 @@
                 el.appendChild(vignette);
             }
             eel.illustratePeriodPy(keywords);
+            el.hidden=false;
         }
         
         eel.expose(illustratePeriodJs);
         function illustratePeriodJs(periodinfos){
-            console.log(periodinfos)
             for(let keywordinfo of periodinfos){
                 let id = 'file-upload-'+keywordinfo.keyword.split(" ").join("-");
                 if(keywordinfo.illustration.length>0){
+                    if(document.getElementById('crop-check').checked)keywordinfo.illustration =keywordinfo.keyword+'_cropped.png';
                     fetch('images/'+(keywordinfo.illustration)).then(response => response.blob()).then(blob=>{
                         let input = document.getElementById(id);
                         let label = input.parentElement.childNodes[1];
-                        label.innerHTML='';
+                        label.innerHTML = '';
                         changeImage(label,blob);
                     })
                 }
             }
-            // let el = document.getElementById('kewordslist')
-            // el.innerHTML = '';
-            // for(let keywordinfo of periodinfos){
-            //     // récupération de l'image générée dans le dossier 'images'
-            //     fetch('images/'+(keywordinfo.illustration))
-            //     .then(response => response.blob())
-            //     .then(blob => {
-            //         // création de l'élélement image
-            //         const img = document.createElement('img');
-            //         img.src = URL.createObjectURL(blob);
-            //         img.className='illustration';
-            //         // encapsulation de l'élément dans des div (pour légender l'image)
-            //         const vignette = document.createElement('div');
-            //         vignette.className='vignette';
-            //         vignette.innerHTML='<span class="description">'+keywordinfo.keyword+'</span>';
-            //         vignette.appendChild(img);
-            //         el.appendChild(vignette);
-            //         console.log(vignette)
-            //     })
-            // }
         }
 
 
@@ -105,7 +90,7 @@
             if (file) {
                 const blob = new Blob([file], { type: file.type });
                 let label = evt.srcElement.parentElement.childNodes[1];
-                label.innerHTML=''
+                labek.innerHTML='';
                 changeImage(label,blob);
             }
         }
@@ -115,6 +100,28 @@
             img.src = URL.createObjectURL(blob);
             parent.appendChild(img)
         }
+
+        document.getElementById('crop-check').addEventListener('change',(evt)=>{
+           let checked = evt.currentTarget.checked;
+           let labels =Array.from(document.getElementById('keywordslist').getElementsByTagName('label'));
+           fetch("keywords_illustration.json").then(res=>res.json()).then(allkeywordsinfo=>{
+               for (let label of labels){
+                   let id = label.getAttribute('for')
+                   let keyword = label.getAttribute('for').replace('file-upload-',"")
+                   let path = 'images/'+allkeywordsinfo[keyword].illustration;
+                   if(checked)path ='images/'+keyword+'_cropped.png';
+                   if(allkeywordsinfo[keyword].illustration.length>0){
+                        fetch(path).then(response => response.blob()).then(blob=>{
+                                let input = document.getElementById(id);
+                                let label = input.parentElement.childNodes[1];
+                                label.innerHTML = '';
+                                changeImage(label,blob);
+                            })
+                    }
+                }
+            })
+
+        })
     </script>
 </body>
 </html>

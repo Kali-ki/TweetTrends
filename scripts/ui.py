@@ -117,7 +117,7 @@ def _illustrate_keywords(keywords : list[str],parsers : list[ImageParser],save_i
         if  len(url)>0: # On sauve l'image si on a trouvé une url
             illustration = _imagenameformat(url, keyword)
             if not os.path.exists(UI_FOLDER+'/images/' + illustration):
-                saveImage(url, keyword)
+               illustration= saveImage(url, keyword,both=True)
         keywords_infos.append({
             "keyword":keyword,
             "url":url,
@@ -143,22 +143,23 @@ def _imagenameformat(url,imagename=None,background=False):
     return imagename
 
 
-def saveImage(url : str,imagename=None,background=False):
+def saveImage(url : str,imagename=None,background=False,both=False):
     """
     loads and saves an image from an url in the UI_FOLDER
     background indicates the presence of background
     imagename is a name of image (without its format)
+    if both is true, it saves the image with AND without the bg
     """
     img = imagelib.loadimage(url)
-    if not background : 
-        img = imagelib.rembg(img)
-    imagename = _imagenameformat(url,imagename,background)
-    path = UI_FOLDER+"/images/"+imagename
-    imagelib.saveImage(img,path)
-    #waits for the images to be loaded
-    while(not os.path.exists(path)):pass
-    print(path)
-    return imagename
+    root = UI_FOLDER+"/images/"
+    if  background or both:
+        fullname = _imagenameformat(url,imagename,False)
+        imagelib.saveImage(img,root+fullname)
+    if not background or both:
+        img_nobg = imagelib.rembg(img)
+        fullname = _imagenameformat(url,imagename+'_cropped',False)
+        imagelib.saveImage(img_nobg,root+fullname)
+    return fullname
     
 
 def _findImageLinks(parser : ImageParser,keywordsurls:dict[str,str]):

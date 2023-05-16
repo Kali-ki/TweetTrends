@@ -38,7 +38,7 @@ def showImage(img : Image):
     img.show()
 
 def saveImage(img : Image,filename):
-    img.save(filename, quality=85)
+    img.save(filename, quality=100)
     
 
 def rembg(img : Image):
