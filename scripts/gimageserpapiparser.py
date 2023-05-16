@@ -14,6 +14,7 @@ def _get_google_image_link(search, lang='fr'):
     """
     results = _search_google_image(search,lang)
     return ''
+    print(results)
 #_remove_query_string_from_url(results[0]["original"])
 
 

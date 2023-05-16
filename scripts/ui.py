@@ -9,13 +9,16 @@ import shutil
 import json
 
 import pandas as pd
-import re
 
 
 UI_FOLDER='web'
 
 TOP_HASHTAGS = '../data/tweets/most_used_hashtags.csv'
 
+
+####################
+#     INIT UI      #
+###################
 
 def startui(save_ui=True):
    if not os.path.exists(UI_FOLDER): os.mkdir(UI_FOLDER)
@@ -34,7 +37,7 @@ def startui(save_ui=True):
     eel.loadPeriodJs(keywords)
 
    @eel.expose
-   def illustratePerdiodPy(keywords):
+   def illustratePeriodPy(keywords):
     wikip = WikiParser
     gisp = GImageSerpApiParser
     eel.illustratePeriodJs(_illustrate_keywords(keywords,[wikip, gisp]))
@@ -45,11 +48,6 @@ def startui(save_ui=True):
        exit()
    eel.start('index.html',close_callback=close,size=(700,700))
 
-
-
-####################
-#     INIT UI      #
-###################
 
 def _createImagesFolder():
     if not os.path.exists(UI_FOLDER+"/images"):  os.mkdir(UI_FOLDER+'/images')

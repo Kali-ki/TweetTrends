@@ -14,9 +14,9 @@
         img {
             height: 100px;
         }
-        #kewordslist{
+        #keywordslist{
             display: flex;
-            flex-direction: column;
+            flex-wrap: wrap;
             align-items: center;
         }
         .image-selector {
@@ -35,7 +35,7 @@
     <select name="periods" id="periods">
         <!--datestopropose-->
       </select>
-      <div id="kewordslist">
+      <div id="keywordslist">
 
       </div>
     <script type="text/javascript">
@@ -50,7 +50,7 @@
         
         eel.expose(loadPeriodJs);
         function loadPeriodJs(keywords) {
-            let el = document.getElementById('kewordslist');
+            let el = document.getElementById('keywordslist');
             el.innerHTML = '';
             for(let keyword of keywords){
                 let id = keyword.split(" ").join("-");
@@ -60,30 +60,43 @@
                 vignette.innerHTML+='</div>';
                 el.appendChild(vignette);
             }
+            eel.illustratePeriodPy(keywords);
         }
         
         eel.expose(illustratePeriodJs);
         function illustratePeriodJs(periodinfos){
-            let el = document.getElementById('kewordslist')
-            el.innerHTML = '';
+            console.log(periodinfos)
             for(let keywordinfo of periodinfos){
-                // récupération de l'image générée dans le dossier 'images'
-                fetch('images/'+(keywordinfo.illustration))
-                .then(response => response.blob())
-                .then(blob => {
-                    // création de l'élélement image
-                    const img = document.createElement('img');
-                    img.src = URL.createObjectURL(blob);
-                    img.className='illustration';
-                    // encapsulation de l'élément dans des div (pour légender l'image)
-                    const vignette = document.createElement('div');
-                    vignette.className='vignette';
-                    vignette.innerHTML='<span class="description">'+keywordinfo.keyword+'</span>';
-                    vignette.appendChild(img);
-                    el.appendChild(vignette);
-                    console.log(vignette)
-                })
+                let id = 'file-upload-'+keywordinfo.keyword.split(" ").join("-");
+                if(keywordinfo.illustration.length>0){
+                    fetch('images/'+(keywordinfo.illustration)).then(response => response.blob()).then(blob=>{
+                        let input = document.getElementById(id);
+                        let label = input.parentElement.childNodes[1];
+                        label.innerHTML='';
+                        changeImage(label,blob);
+                    })
+                }
             }
+            // let el = document.getElementById('kewordslist')
+            // el.innerHTML = '';
+            // for(let keywordinfo of periodinfos){
+            //     // récupération de l'image générée dans le dossier 'images'
+            //     fetch('images/'+(keywordinfo.illustration))
+            //     .then(response => response.blob())
+            //     .then(blob => {
+            //         // création de l'élélement image
+            //         const img = document.createElement('img');
+            //         img.src = URL.createObjectURL(blob);
+            //         img.className='illustration';
+            //         // encapsulation de l'élément dans des div (pour légender l'image)
+            //         const vignette = document.createElement('div');
+            //         vignette.className='vignette';
+            //         vignette.innerHTML='<span class="description">'+keywordinfo.keyword+'</span>';
+            //         vignette.appendChild(img);
+            //         el.appendChild(vignette);
+            //         console.log(vignette)
+            //     })
+            // }
         }
 
 
@@ -101,7 +114,6 @@
             const img = document.createElement('img');
             img.src = URL.createObjectURL(blob);
             parent.appendChild(img)
-
         }
     </script>
 </body>
