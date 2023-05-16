@@ -78,7 +78,7 @@ def convert_hashtags_to_list(df_tweets_hashtags):
 
 # --- Main ----------------------------------------------------------------------------------------
 
-# Path to the tweets CSV file
+# Path to the CSV file
 path = os.path.join(os.path.dirname(__file__), '../../data/tweets/tweets.csv')
 
 # Read CSV file with pandas
@@ -161,7 +161,7 @@ plt.title("Evolution of the most popular hashtags through the years")
 plt.xlabel("Year")
 plt.ylabel("Number of occurences")
 
-# Path to the tweets CSV file
+# Path to the CSV file
 path = os.path.join(os.path.dirname(__file__), '../../images/hashtags_evolution.png')
 # Save the figure
 plt.savefig(path)

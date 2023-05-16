@@ -4,6 +4,7 @@
 # the "score" and a context link.
 #--------------------------------------------------------------------------------------------------
 
+import os
 import pandas as pd
 import ast
 
@@ -12,8 +13,10 @@ def generate_link(hashtag, year):
     link = "https://twitter.com/search?q=(%23" + hashtag + ")%20lang%3Afr%20until%3A" + year + "-12-31%20since%3A" + year + "-01-01&src=typed_query"
     return link
 
+# Path to the CSV file
+path = os.path.join(os.path.dirname(__file__), '../../data/tweets/tweets.csv')
 # Read CSV file with pandas
-df_tweets = pd.read_csv('../../data/tweets/tweets.csv')
+df_tweets = pd.read_csv(path)
 
 # Keep only tweets with lang='fr'
 df_tweets = df_tweets[df_tweets["lang"] == "fr"]
@@ -89,5 +92,7 @@ for i in range(number_of_years+1):
     # Merge the dataframe and the series in df_hashtags
     df_hashtags = pd.concat([df_hashtags, df_hashtags_year_i, series_link], axis = 1)
 
-# Save the dataframe to a csv file
-df_hashtags.to_csv("../../data/tweets/most_used_hashtags.csv", index = False)
+# Path to the CSV file
+path = os.path.join(os.path.dirname(__file__), '../../data/tweets/most_used_hashtags.csv')
+# Save the dataframe to the CSV file
+df_hashtags.to_csv(path, index = False)

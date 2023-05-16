@@ -3,6 +3,7 @@
 # into a CSV file with the following columns : created_at, hashtags.
 # -------------------------------------------------------------------------------------------------
 
+import os
 import pandas as pd
 
 # Function to parse elements of a tweet
@@ -17,8 +18,10 @@ def parse_hashtags(list_hashtags):
         res.append(list_hashtags[i]["text"])
     return res
 
+# Path to the JSON file
+path = os.path.join(os.path.dirname(__file__), '../../data/tweets/tweet_dataset.json')
 # Read JSON file with pandas
-df_tweets_ = pd.read_json('../../data/tweets/tweet_dataset.json')
+df_tweets_ = pd.read_json(path)
 
 # Select only the raw_value column
 df_tweets_ = df_tweets_["raw_value"]
@@ -40,5 +43,7 @@ df_tweets["hashtags"] = df_tweets_hashtags.apply(parse_hashtags)
 # Drop the entities column
 df_tweets.drop(columns = ["entities"], inplace = True)
 
+# Path to the CSV file
+path = os.path.join(os.path.dirname(__file__), '../../data/tweets/tweets.csv')
 # Save the dataframe as a CSV file
-df_tweets.to_csv('../../data/tweets/tweets.csv', index = False)
+df_tweets.to_csv(path, index = False)
