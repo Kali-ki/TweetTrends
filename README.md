@@ -15,8 +15,10 @@ The development of this project has been split into 2 parts :
 
 ### Requirements
 
-- Python 3
-- requirements.txt
+Python 3 with pip (package manager) 
+
+Install all the required libraries with ```pip install -r requirements.txt```
+
 
 ## Launch the project
 

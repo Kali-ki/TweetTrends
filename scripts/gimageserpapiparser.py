@@ -13,7 +13,8 @@ def _get_google_image_link(search, lang='fr'):
     Recherche un lien viable pour charger une image de google représentative du mot clé recherché
     """
     results = _search_google_image(search,lang)
-    return 'https://fs-prod-cdn.nintendo-europe.com/media/images/10_share_images/portals_3/2x1_SuperMarioHub_image1600w.jpg'
+    return ''
+    print(results)
 #_remove_query_string_from_url(results[0]["original"])
 
 

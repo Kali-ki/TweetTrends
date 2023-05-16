@@ -3,15 +3,22 @@ import shutil
 import os
 import imagelib
 from imagelib import ImageParser
-import glob
 from wikiparser import WikiParser
 from gimageserpapiparser import GImageSerpApiParser
 import shutil
 import json
 
+import pandas as pd
+
 
 UI_FOLDER='web'
 
+TOP_HASHTAGS = '../data/tweets/most_used_hashtags.csv'
+
+
+####################
+#     INIT UI      #
+###################
 
 def startui(save_ui=True):
    if not os.path.exists(UI_FOLDER): os.mkdir(UI_FOLDER)
@@ -26,10 +33,15 @@ def startui(save_ui=True):
     The keywords of the periods are retreived
     The  illustration images are downloaded and their background are removed
     '''
+    keywords = _updateKeywords(periodid)
+    eel.loadPeriodJs(keywords)
+
+   @eel.expose
+   def illustratePeriodPy(keywords):
     wikip = WikiParser
     gisp = GImageSerpApiParser
-    keywords = _updateKeywords(periodid)
-    eel.loadPeriodJs(_illustrate_keywords(keywords,[wikip, gisp]))
+    eel.illustratePeriodJs(_illustrate_keywords(keywords,[wikip, gisp]))
+
 
    def close(route,sockets):
        if not save_ui : _deleteUIfolder()
@@ -37,25 +49,27 @@ def startui(save_ui=True):
    eel.start('index.html',close_callback=close,size=(700,700))
 
 
-
-####################
-#     INIT UI      #
-###################
-
 def _createImagesFolder():
     if not os.path.exists(UI_FOLDER+"/images"):  os.mkdir(UI_FOLDER+'/images')
+    source_path = '../images/emptyimage.svg'
+    destination_path = UI_FOLDER+'/images/emptyimage.svg'
+    shutil.copy(source_path, destination_path)
 
 def _deleteUIfolder():
     if os.path.exists(UI_FOLDER):shutil.rmtree(UI_FOLDER)
 
 
 def _updateKeywords(period):
-    #TODO: interact with tweeter (by example) to find keywords fitting to a period
-    return ["griezmann","ironsd","mario"]
+    #interact with tweeter results to find keywords fitting to a period
+    df = pd.read_csv(TOP_HASHTAGS).sort_values('score '+period,ascending=False)
+    return df[period].tolist()
     
 def _initPeriods():
-    #TODO: load all available periods on init 
-    return ["Decembre 2020", "Janvier 2021","Fevrier 2021"]
+    #load all available periods on init 
+    df = pd.read_csv(TOP_HASHTAGS)
+    # the regex finds all the columns that are 4 digits
+    year_columns = df.columns[df.columns.str.match(r'^\d{4}$')]
+    return year_columns
 
 def _initHTMLCSSJSFiles():
     indexlines = []
@@ -95,14 +109,15 @@ def _illustrate_keywords(keywords : list[str],parsers : list[ImageParser],save_i
     for parser in parsers:
         keywords_url = _findImageLinks(parser,keywords_url)
     
-    #Resets the images folder content and loads all the new images in it
-    # for f in glob.glob(UI_FOLDER+"/images/*"):os.remove(f)
+    # loads all the new images in the images folder
     keywords_infos = []
     for keyword in list(keywords_url.keys()):
         url = keywords_url[keyword]
-        illustration = _imagenameformat(url, keyword)
-        if not os.path.exists(UI_FOLDER+'/images/' + illustration):
-            saveImage(url, keyword)
+        illustration = ''
+        if  len(url)>0: # On sauve l'image si on a trouvé une url
+            illustration = _imagenameformat(url, keyword)
+            if not os.path.exists(UI_FOLDER+'/images/' + illustration):
+                saveImage(url, keyword)
         keywords_infos.append({
             "keyword":keyword,
             "url":url,
