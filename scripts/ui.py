@@ -3,14 +3,18 @@ import shutil
 import os
 import imagelib
 from imagelib import ImageParser
-import glob
 from wikiparser import WikiParser
 from gimageserpapiparser import GImageSerpApiParser
 import shutil
 import json
 
+import pandas as pd
+import re
+
 
 UI_FOLDER='web'
+
+TOP_HASHTAGS = '../data/tweets/most_used_hashtags.csv'
 
 
 def startui(save_ui=True):
@@ -58,12 +62,16 @@ def _deleteUIfolder():
 
 
 def _updateKeywords(period):
-    #TODO: interact with tweeter (by example) to find keywords fitting to a period
-    return ["griezmann","françois hollande","mario"]
+    #interact with tweeter results to find keywords fitting to a period
+    df = pd.read_csv(TOP_HASHTAGS).sort_values('score '+period,ascending=False)
+    return df[period].tolist()
     
 def _initPeriods():
-    #TODO: load all available periods on init 
-    return ["Decembre 2020", "Janvier 2021","Fevrier 2021"]
+    #load all available periods on init 
+    df = pd.read_csv(TOP_HASHTAGS)
+    # the regex finds all the columns that are 4 digits
+    year_columns = df.columns[df.columns.str.match(r'^\d{4}$')]
+    return year_columns
 
 def _initHTMLCSSJSFiles():
     indexlines = []
