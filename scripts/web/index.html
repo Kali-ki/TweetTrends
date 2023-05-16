@@ -1,0 +1,110 @@
+<html>
+<head>
+<meta charset="UTF-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Projet DE</title>
+<script type="text/javascript" src="/eel.js"></script>
+<style>
+body {
+background: rgb(136, 210, 222);
+color: white;
+font-family: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
+}
+img {
+height: 100px;
+}
+#kewordslist{
+display: flex;
+flex-direction: column;
+align-items: center;
+}
+.image-selector {
+display: none;
+}
+.vignette {
+display: flex;
+flex-direction: column;
+align-items: center;
+}
+</style>
+</head>
+
+<body>
+<h1>Trends timeline</h1>
+<select name="periods" id="periods">
+<option value="decembre-2020">Decembre 2020</value>
+<option value="janvier-2021">Janvier 2021</value>
+<option value="fevrier-2021">Fevrier 2021</value>
+</select>
+<div id="kewordslist">
+
+</div>
+<script type="text/javascript">
+document.getElementById('periods').addEventListener('change',(evt)=>{
+changePeriodJs(evt.target.value)
+})
+
+eel.expose(changePeriodJs);
+function changePeriodJs(periodid){
+eel.loadPeriodPy(periodid)
+}
+
+eel.expose(loadPeriodJs);
+function loadPeriodJs(keywords) {
+let el = document.getElementById('kewordslist');
+el.innerHTML = '';
+for(let keyword of keywords){
+let id = keyword.split(" ").join("-");
+const vignette = document.createElement('div');
+vignette.className='vignette';
+vignette.innerHTML='<div class="illustration"> <label for="file-upload-'+id+'"><img src="images/emptyimage.svg"></label> <input class="image-selector"  id="file-upload-'+id+'"  type="file" accept="image/png, image/jpeg" onchange=" changeImageFromInputEvent(event)"> </div><div class="description">'+keyword+'</div>';
+vignette.innerHTML+='</div>';
+el.appendChild(vignette);
+}
+}
+
+eel.expose(illustratePeriodJs);
+function illustratePeriodJs(periodinfos){
+let el = document.getElementById('kewordslist')
+el.innerHTML = '';
+for(let keywordinfo of periodinfos){
+// récupération de l'image générée dans le dossier 'images'
+fetch('images/'+(keywordinfo.illustration))
+.then(response => response.blob())
+.then(blob => {
+// création de l'élélement image
+const img = document.createElement('img');
+img.src = URL.createObjectURL(blob);
+img.className='illustration';
+// encapsulation de l'élément dans des div (pour légender l'image)
+const vignette = document.createElement('div');
+vignette.className='vignette';
+vignette.innerHTML='<span class="description">'+keywordinfo.keyword+'</span>';
+vignette.appendChild(img);
+el.appendChild(vignette);
+console.log(vignette)
+})
+}
+}
+
+
+function changeImageFromInputEvent(evt){
+const file = event.target.files[0];
+if (file) {
+const blob = new Blob([file], { type: file.type });
+let label = evt.srcElement.parentElement.childNodes[1];
+label.innerHTML=''
+changeImage(label,blob);
+}
+}
+
+function changeImage(parent,blob){
+const img = document.createElement('img');
+img.src = URL.createObjectURL(blob);
+parent.appendChild(img)
+
+}
+</script>
+</body>
+</html>
