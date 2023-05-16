@@ -72,7 +72,7 @@ for i in range(number_of_years+1):
 
     # Generate the link for each hashtag and store them in a series
     series_link = pd.Series(series_hashtags_year_i.index).apply(lambda tuple: generate_link(tuple, str(base+i)))
-    series_link.name = "context link"
+    series_link.name = "context link "+str(base+i)
 
     # Place hashtags as columns and their score as values -> convert the series to a dataframe
     df_hashtags_year_i = series_hashtags_year_i.reset_index()
