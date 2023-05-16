@@ -5,6 +5,7 @@ import ast
 df_tweets = pd.read_csv('../data/tweets.csv')
 
 # Keep only tweets with lang='fr'
+import ast
 df_tweets = df_tweets[df_tweets["lang"] == "fr"]
 
 # Reset index
@@ -24,6 +25,9 @@ for year in range(2010, 2023):
 
 base = 2010
 number_of_years = 12
+
+# Create new DataFrame
+df_hashtags = pd.DataFrame()
 
 # Loop over the list of dataframes
 for i in range(number_of_years+1):
@@ -50,8 +54,23 @@ for i in range(number_of_years+1):
     list_not_wanted_hashtags = ["CONCOURS", "RT", "FB", "FF", "LT", "ON", "LRT", "FACEBOOK"]
     for hashtag in list_not_wanted_hashtags:
         series_hashtags_year_i = series_hashtags_year_i[series_hashtags_year_i != hashtag]
+    
+    # Drop the hashtags which contains word "TOPACHAT"
+    series_hashtags_year_i = series_hashtags_year_i[~series_hashtags_year_i.str.contains("TOPACHAT")]
+
+    # Keep only the 10 most popular hashtags
+    series_hashtags_year_i = series_hashtags_year_i.value_counts().head(10)
 
     # Get the 15 most popular hashtags
     print("Most used hashatag in year", str(base+i), ":")
-    print(series_hashtags_year_i.value_counts().head(15),"\n")
-    
+    print(series_hashtags_year_i,"\n")
+
+    series_hashtags_year_i = series_hashtags_year_i.reset_index()
+    series_hashtags_year_i.columns = [base+i, "score "+str(base+i)]
+
+    # Add the series to the dataframe
+    df_hashtags = pd.concat([df_hashtags, series_hashtags_year_i], axis = 1)
+
+# Save the dataframe to a csv file
+df_hashtags.to_csv("../data/most_used_hashtags.csv", index = False)
+ 
