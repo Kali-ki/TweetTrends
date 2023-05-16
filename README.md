@@ -26,7 +26,7 @@ TODO
 
 ## Development
 
-> To get more details about the scripts, you can go to the [scripts](scripts) folder. All the scripts are documented.
+> To get more details about the scripts, you can go to the [scripts](scripts/tweets/) folder. All the scripts are documented.
 
 ### 📕 Data source
 
