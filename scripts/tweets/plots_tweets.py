@@ -156,4 +156,8 @@ plt.legend(loc = "upper right")
 plt.title("Evolution of the most popular hashtags through the years")
 plt.xlabel("Year")
 plt.ylabel("Number of occurences")
+
+# Save the figure
+plt.savefig("../../images/hashtags_evolution.png")
+
 plt.show()
