@@ -78,7 +78,8 @@ def startui():
          DATE_START_V,
          DATE_END_V,
          HASHTAGS_TO_DROP)
-    plt.show()
+    plt.savefig(UI_FOLDER +'/hashtags_evolution.png')
+    eel.updatePlotImageJs()
 
    def close(route,sockets):
        exit()

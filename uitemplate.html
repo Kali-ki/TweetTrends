@@ -28,7 +28,8 @@
             align-items: center;
             justify-content: center;
             margin: 2em;
-            flex-direction: row;
+            flex-direction: column;
+            gap: 1em;
         }
         .image-selector {
             display: none;
@@ -57,19 +58,19 @@
       <div id="keywordslist">
       </div>
       <div id="dynamic-plot">
-        <img src="hashtags_evolution.png">
-        <div class="params">
-            <input type='number' placeholder="NB TWEETS TO KEEP" id="plot-nb-tweets-to-keep" value="10">
-            <input type="text" placeholder="SEARCHED HASHTAGS" id="plot-searched-hashtags">
-            <label for="plot-fr-only">FR ONLY</label>
-            <input type="checkbox" id="plot-fr-only" checked>
-            <input type="number" placeholder="DATE START T" min="2010" max="2022" step="1" id="plot-date-start-t" value="2010"/>
-            <input type="number" placeholder="DATE END T" min="2010" max="2022" step="1" id="plot-date-end-t" value="2022"/>
-            <input type="number" placeholder="DATE START V" min="2010" max="2022" step="1" id="plot-date-start-v" value="2010"/>
-            <input type="number" placeholder="DATE END V" min="2010" max="2022" step="1" id="plot-date-end-v" value="2022"/>
-            <input type="text"  placeholder="HASHTAGS TO DROP" id="plot-hashtags-to-drop">
-            <button onclick="plot()">Plot</button>
-        </div>
+          <div class="params">
+              <input type='number' placeholder="NB TWEETS TO KEEP" id="plot-nb-tweets-to-keep" value="10">
+              <input type="text" placeholder="SEARCHED HASHTAGS" id="plot-searched-hashtags">
+              <label for="plot-fr-only">FR ONLY</label>
+              <input type="checkbox" id="plot-fr-only" checked>
+              <input type="number" placeholder="DATE START T" min="2010" max="2022" step="1" id="plot-date-start-t" value="2010"/>
+              <input type="number" placeholder="DATE END T" min="2010" max="2022" step="1" id="plot-date-end-t" value="2022"/>
+              <input type="number" placeholder="DATE START V" min="2010" max="2022" step="1" id="plot-date-start-v" value="2010"/>
+              <input type="number" placeholder="DATE END V" min="2010" max="2022" step="1" id="plot-date-end-v" value="2022"/>
+              <input type="text"  placeholder="HASHTAGS TO DROP" id="plot-hashtags-to-drop">
+              <button onclick="plot()">Plot</button>
+          </div>
+        <img id="hashtags_evolution.png" src="hashtags_evolution.png">
       </div>
     <script type="text/javascript">
         let currentperiodid = document.getElementById('periods').value;
@@ -181,12 +182,16 @@
             let date_start_v =  parseInt(document.getElementById('plot-date-start-v').value);
             let date_end_v =  parseInt(document.getElementById('plot-date-end-v').value);
             let hashtags_to_drop = parseStringList(document.getElementById('plot-hashtags-to-drop').value);
-            console.log(nb_tweets)
-            console.log(searched_hashtags)
-            console.log(fr_only)
-            console.log(date_start_t)
-            console.log(hashtags_to_drop)
             eel.plotPy(nb_tweets,searched_hashtags,fr_only,date_start_t,date_end_t,date_start_v,date_end_v,hashtags_to_drop)
+        }
+
+        eel.expose(updatePlotImageJs);
+        function updatePlotImageJs(){
+            fetch('hashtags_evolution.png').then(response => response.blob()).then(blob=>{
+                    let dynamic_plot = document.getElementById('dynamic-plot')
+                    dynamic_plot.removeChild(dynamic_plot.getElementsByTagName('img')[0])
+                    changeImage(dynamic_plot,blob);
+            })
         }
 
         function parseStringList(inputString) {
