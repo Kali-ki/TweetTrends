@@ -28,6 +28,9 @@
             flex-direction: column;
             align-items: center;
         }
+        a {
+            color: white;
+        }
     </style>
 </head>
 
@@ -43,7 +46,9 @@
       </div>
     <script type="text/javascript">
 
-        let currentperiodid;
+        let currentperiodid = document.getElementById('periods').value;
+
+        changePeriodJs(currentperiodid);
 
         document.getElementById('periods').addEventListener('change',(evt)=>{
             changePeriodJs(evt.target.value)
@@ -60,17 +65,17 @@
             let el = document.getElementById('keywordslist');
             el.innerHTML = '';
             el.hidden=true;
-            for(let keyword of keywords){
+            for(let i in keywords){
+                let keyword = keywords[i];
                 let id = keyword.split(" ").join("-");
                 const vignette = document.createElement('div');
                 vignette.className='vignette';
-                const vignette_content = '<div class="illustration"> <label for="file-upload-'+id+'"><img src="images/emptyimage.svg"></label> <input class="image-selector"  id="file-upload-'+id+'"  type="file" accept="image/png, image/jpeg" onchange=" changeImageFromInputEvent(event,'+'\''+keyword+'\''+')"> </div><div class="description">'+keyword+'</div>'
-                // console.log(vignette_content);
+                const vignette_content = '<div class="illustration"> <label for="file-upload-'+id+'"><img src="images/emptyimage.svg"></label> <input class="image-selector"  id="file-upload-'+id+'"  type="file" accept="image/png, image/jpeg" onchange=" changeImageFromInputEvent(event,'+'\''+keyword+'\''+')"> </div><div class="description">#'+i+' '+keyword+'</div>'
                 vignette.innerHTML=vignette_content;
                 vignette.innerHTML+='</div>';
                 el.appendChild(vignette);
             }
-            eel.illustratePeriodPy(keywords);
+            eel.illustratePeriodPy(currentperiodid,keywords);
             el.hidden=false;
         }
         
@@ -78,16 +83,19 @@
         function illustratePeriodJs(periodinfos){
             for(let keywordinfo of periodinfos){
                 let id = 'file-upload-'+keywordinfo.keyword.split(" ").join("-");
+                let input = document.getElementById(id);
+                let label = input.parentElement.childNodes[1];
                 if(keywordinfo.illustration.length>0){
                     let illustration = keywordinfo.illustration;
                     if(document.getElementById('crop-check').checked)illustration =cropppedName(illustration);
                     fetch('images/'+(illustration)).then(response => response.blob()).then(blob=>{
-                        let input = document.getElementById(id);
-                        let label = input.parentElement.childNodes[1];
                         label.innerHTML = '';
                         changeImage(label,blob);
                     })
                 }
+                let description = label.parentElement.parentElement.childNodes[1]
+                let content_description = description.innerHTML
+                description.innerHTML = '<a href="'+keywordinfo.link+'" target="_blank">'+content_description+'</a>';
             }
 
         }

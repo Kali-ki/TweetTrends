@@ -31,6 +31,11 @@ def _illustrateAllPeriods(parsers):
         keywords = getAllKeywords(period)
         _illustrate_keywords(keywords,parsers)
 
+def getDfPeriod(periodid):
+    # get a data frame with columns that match only the corresponding period
+    df =pd.read_csv(TOP_HASHTAGS)
+    df = df[df.columns[df.columns.map(lambda x: periodid in x)]]
+    return df
 
 
 def getAllPeriods():
@@ -42,10 +47,9 @@ def getAllPeriods():
 
 
 def getAllKeywords(period):
-    '''recuperates all the most important keywords related to a period'''
+    '''retrives all the most important keywords related to a period'''
     df = pd.read_csv(TOP_HASHTAGS).sort_values('score '+period,ascending=False)
     return df[period].tolist()
-    # return ['Vincent COllet','Super Man','Mario']
 
 
 def getSavedKeywordsIllustrations():

@@ -18,7 +18,7 @@ def buildui(parsers):
    uibuilder.build(parsers)
 
 def startui():
-#    uibuilder.buildtemplate()
+   uibuilder.buildtemplate()
    eel.init(UI_FOLDER)  
    @eel.expose
    def loadPeriodPy(periodid):
@@ -52,9 +52,12 @@ def startui():
 
 
    @eel.expose
-   def illustratePeriodPy(keywords):
+   def illustratePeriodPy(periodid,keywords):
     allillustrations =  uibuilder.getSavedKeywordsIllustrations()
     keywordsinfos =  [allillustrations[keyword] for keyword in keywords]
+    for keywordinfo in keywordsinfos:
+       df = uibuilder.getDfPeriod(periodid)
+       keywordinfo['link']= df.loc[df[periodid] == keywordinfo['keyword'], 'context link '+periodid].values[0]
     eel.illustratePeriodJs(keywordsinfos)
 
 
