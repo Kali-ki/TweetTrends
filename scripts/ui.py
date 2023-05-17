@@ -62,11 +62,25 @@ def startui():
     eel.illustratePeriodJs(keywordsinfos)
 
    @eel.expose
-   def plotPy():
-    plt = pt.plot()
+   def plotPy(NUMBER_TWEETS_TO_KEEP, 
+         SEARCHED_HASHTAGS, 
+         FR_ONLY,
+         DATE_START_T,
+         DATE_END_T, 
+         DATE_START_V,
+         DATE_END_V,
+         HASHTAGS_TO_DROP):
+    plt = pt.plot(NUMBER_TWEETS_TO_KEEP, 
+         SEARCHED_HASHTAGS, 
+         FR_ONLY,
+         DATE_START_T,
+         DATE_END_T, 
+         DATE_START_V,
+         DATE_END_V,
+         HASHTAGS_TO_DROP)
     plt.show()
 
    def close(route,sockets):
        exit()
 
-   eel.start('index.html', close_callback=close,size=(700,700), mode='default')
+   eel.start('index.html', close_callback=close,size=(700,700), mode='chrome')
