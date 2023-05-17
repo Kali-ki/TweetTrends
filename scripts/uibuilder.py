@@ -5,8 +5,6 @@ from imagelib import ImageParser
 import imagelib
 from imagelib import ImageParser
 import json
-from wikiparser import WikiParser
-from gimageserpapiparser import GImageSerpApiParser
 
 
 TOP_HASHTAGS = '../data/tweets/most_used_hashtags.csv'
@@ -14,11 +12,11 @@ UI_FOLDER='web'
 
 
 
-def build():
+def build(parsers):
     if not os.path.exists(UI_FOLDER): os.mkdir(UI_FOLDER)
-    _initHTMLCSSJSFiles()
+    buildtemplate()
     _createImagesFolder()
-    _illustrateAllPeriods([WikiParser,GImageSerpApiParser])
+    _illustrateAllPeriods(parsers)
 
 
 def _createImagesFolder():
@@ -45,8 +43,9 @@ def getAllPeriods():
 
 def getAllKeywords(period):
     '''recuperates all the most important keywords related to a period'''
-    df = pd.read_csv(TOP_HASHTAGS).sort_values('score '+period,ascending=False)
-    return df[period].tolist()
+    # df = pd.read_csv(TOP_HASHTAGS).sort_values('score '+period,ascending=False)
+    # return df[period].tolist()
+    return ['Vincent COllet','Super Man','Mario']
 
 
 def getSavedKeywordsIllustrations():
@@ -63,7 +62,7 @@ def saveKeywordsIllustrations(keywords_infos):
 
 
 
-def _initHTMLCSSJSFiles():
+def buildtemplate():
     indexlines = []
     # read the template
     with open('../uitemplate.html', 'r') as template:
@@ -99,12 +98,16 @@ def _illustrate_keywords(keywords : list[str],parsers : list[ImageParser],save_i
     # loads all the new images in the images folder
     keywords_infos = []
     for keyword in list(keywords_url.keys()):
-        url = keywords_url[keyword]
-        illustration = ''
-        if  len(url)>0: # On sauve l'image si on a trouvé une url
-            illustration = _imagenameformat(url, keyword)
-            if not os.path.exists(UI_FOLDER+'/images/' + illustration):
-               illustration= saveImage(url, keyword,both=True)
+        if keyword in keywords_existing_illustrations:
+            url = keywords_existing_illustrations[keyword]['url']
+            illustration = keywords_existing_illustrations[keyword]['illustration']
+        else :
+            url = keywords_url[keyword]
+            illustration = ''
+            if  len(url)>0: # On sauve l'image si on a trouvé une url
+              illustration = _imagenameformat(url, keyword)
+              if not os.path.exists(UI_FOLDER+'/images/' + illustration):
+                illustration= saveImage(url, keyword,both=True)
         keywords_infos.append({
             "keyword":keyword,
             "url":url,
@@ -133,10 +136,10 @@ def _imagenameformat(url,imagename=None,background=False):
     '''
     sp= imagelib.imageNameFromUrl(url)
     if imagename: sp[0]=imagename
-    imagename.replace('%','_').replace(' ','_') #file name cannot have '%' in their names
     # we convert automatically the image in png if the bg is removed
     if not background: sp[1]='png'
     imagename = sp[0]+'.'+sp[1]
+    imagename =imagename.replace('%','_').replace(' ','_') #file name cannot have '%' in their names
     return imagename
 
 
@@ -154,6 +157,7 @@ def saveImage(url : str,imagename=None,background=False,both=False):
         imagelib.saveImage(img,root+fullname)
     if not background or both:
         img_nobg = imagelib.rembg(img)
-        fullname = _imagenameformat(url,imagename+'_cropped',False)
-        imagelib.saveImage(img_nobg,root+fullname)
+        croppedname = _imagenameformat(url,imagename+'_cropped',False)
+        imagelib.saveImage(img_nobg,root+croppedname)
     return fullname
+    

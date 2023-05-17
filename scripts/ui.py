@@ -1,16 +1,24 @@
 import uibuilder
+import urllib.parse
 import eel
+from wikiparser import WikiParser
+from gimageserpapiparser import GImageSerpApiParser
+import base64
+import imagelib
+from PIL import Image
+import json
 
 UI_FOLDER='web'
 TOP_HASHTAGS = '../data/tweets/most_used_hashtags.csv'
-
+SERPAPITOKEN = json.load(open('../config.json'))['SERPAPITOKEN']
 
 ####################
 #     INIT UI      #
 ###################
 
 def startui():
-#    uibuilder.build()
+   uibuilder.build([WikiParser,GImageSerpApiParser(SERPAPITOKEN)])
+#    uibuilder.buildtemplate()
    eel.init(UI_FOLDER)  
    @eel.expose
    def loadPeriodPy(periodid):
@@ -23,6 +31,27 @@ def startui():
     eel.loadPeriodJs(keywords)
 
    @eel.expose
+   def saveExternalfile(keyword,filename,data_url):
+    # Remove the "data:image/png;base64," part from the data URL
+    base64_data = data_url.split(',')[1]
+    # Decode the Base64 string into bytes
+    file_data = base64.b64decode(base64_data)
+    # Save the file or process it as needed
+    root_name =  keyword.replace('%','_').replace(' ','_')
+    extension = imagelib.extract_extension(filename)[1]
+    final_name = UI_FOLDER+'/images/'+ root_name+extension
+    cropped_name = UI_FOLDER+'/images/'+ root_name+'_cropped.png'
+    with open(final_name, 'wb') as f:
+        f.write(file_data)
+    with open(cropped_name, 'wb') as f:
+        f.write(file_data)
+    imagelib.saveImage(imagelib.rembg(Image.open(cropped_name)),cropped_name)
+    allillustrations = uibuilder.getSavedKeywordsIllustrations()
+    allillustrations[keyword]['illustration']=root_name+extension
+    uibuilder.saveKeywordsIllustrations(allillustrations)
+
+
+   @eel.expose
    def illustratePeriodPy(keywords):
     allillustrations =  uibuilder.getSavedKeywordsIllustrations()
     keywordsinfos =  [allillustrations[keyword] for keyword in keywords]
@@ -32,7 +61,3 @@ def startui():
    def close(route,sockets):
        exit()
    eel.start('index.html',close_callback=close,size=(700,700))
-
-#    @eel.expose
-#    def saveFilePy(file):
-#      print(file)

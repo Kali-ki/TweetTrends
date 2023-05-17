@@ -3,6 +3,7 @@ import urllib.request
 import requests 
 from rembg import remove
 from abc import ABC, abstractmethod
+import os
 
 
 def imageNameFromUrl(url):
@@ -11,6 +12,12 @@ def imageNameFromUrl(url):
     returns an array [imagename extension]
     '''
     return  url.split('/')[-1].split('.')
+
+
+def extract_extension(filename):
+    base_name = os.path.basename(filename)
+    name, extension = os.path.splitext(base_name)
+    return [name, extension]
 
 def loadimage(url : str):
     '''

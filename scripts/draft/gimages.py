@@ -55,8 +55,8 @@ import requests
 from google_images_search import GoogleImagesSearch
 
 def searchImageWithGoogleAPI(search):
-    API_KEY = 'AIzaSyBuztOh8AWOHQY6PZxF9w0FxauqvE0xsjo'
-    SEARCH_ENGINE_ID = '956978fab341a4ef5'
+    API_KEY = ''
+    SEARCH_ENGINE_ID = ''
     query = search
     gis = GoogleImagesSearch(API_KEY, SEARCH_ENGINE_ID)
 
