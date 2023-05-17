@@ -7,7 +7,7 @@
     <script type="text/javascript" src="/eel.js"></script>
     <style>
         body {
-            background: rgb(136, 210, 222);
+            background: #5f9de9;
             color: white;
             font-family: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
         }
@@ -35,6 +35,7 @@
             display: flex;
             gap: 1em;
             flex-wrap: wrap;
+            align-items: center;
         }
         img {
             border-radius: 20px;
@@ -43,6 +44,7 @@
             border: 0px;
             border-radius: 5px;
             padding: .5em;
+            cursor: pointer;
         }
         input[type="number"]{
             width: 9em;
@@ -65,14 +67,14 @@
         button {
             border-radius: 20px;
             background-color: white;
-            color:rgb(136, 210, 222);
+            color:#5f9de9;
             font-size: 1.5em;
             padding: .5em;
             font-weight: bold;
             border: 0px;
             cursor: pointer;
         }
-        button:hover{
+        button:hover, input:hover,select:hover{
             background-color:rgb(136, 159, 222);
             color:white;
         }
@@ -85,15 +87,15 @@
     <div id="dynamic-plot">
         <h2>Explore Evolutions</h2>
         <div class="params">
-            <input type='number' placeholder="NB TWEETS TO KEEP" id="plot-nb-tweets-to-keep" value="10">
-            <input type="text" placeholder="SEARCHED HASHTAGS" id="plot-searched-hashtags">
+            <input type='number' placeholder="NB TWEETS TO KEEP" id="plot-nb-tweets-to-keep" value="10" title="NB TWEETS TO KEEP">
+            <input type="text" placeholder="SEARCHED HASHTAGS" id="plot-searched-hashtags" title="SEARCHED HASHTAGS">
             <label for="plot-fr-only">FR ONLY</label>
-            <input type="checkbox" id="plot-fr-only" checked>
+            <input type="checkbox" id="plot-fr-only" title="FR ONLY" checked>
             <input  type="number" width="13" placeholder="DATE START T" title="DATE START T" min="2010" max="2022" step="1" id="plot-date-start-t" value="2010"/>
             <input type="number" width="13" placeholder="DATE END T" title="DATE END T" min="2010" max="2022" step="1" id="plot-date-end-t" value="2022"/>
             <input type="number" width="13" placeholder="DATE START V" title="DATE START V" min="2010" max="2022" step="1" id="plot-date-start-v" value="2010"/>
             <input type="number" width="13" placeholder="DATE END V" title="DATE END V" min="2010" max="2022" step="1" id="plot-date-end-v" value="2022"/>
-            <input type="text"  placeholder="HASHTAGS TO DROP" id="plot-hashtags-to-drop">
+            <input type="text"  placeholder="HASHTAGS TO DROP" id="plot-hashtags-to-drop" title="HASHTAGS TO DROP">
             <button onclick="plot()">Plot</button>
         </div>
         <img id="hashtags_evolution.png" src="hashtags_evolution_default.png">
@@ -104,7 +106,7 @@
             <select name="periods" id="periods">
                 <!--datestopropose-->
               </select>
-              <input type="checkbox" id="crop-check" checked>
+              <input type="checkbox" id="crop-check" >
               <label>Supprimer arrière-plan</label>
         </div>
         <div id="keywordslist">
