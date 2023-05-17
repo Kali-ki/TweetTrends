@@ -5,8 +5,6 @@ from imagelib import ImageParser
 import imagelib
 from imagelib import ImageParser
 import json
-from wikiparser import WikiParser
-from gimageserpapiparser import GImageSerpApiParser
 
 
 TOP_HASHTAGS = '../data/tweets/most_used_hashtags.csv'
@@ -14,11 +12,11 @@ UI_FOLDER='web'
 
 
 
-def build():
+def build(parsers):
     if not os.path.exists(UI_FOLDER): os.mkdir(UI_FOLDER)
-    _initHTMLCSSJSFiles()
+    buildtemplate()
     _createImagesFolder()
-    _illustrateAllPeriods([WikiParser,GImageSerpApiParser])
+    _illustrateAllPeriods(parsers)
 
 
 def _createImagesFolder():
@@ -33,6 +31,11 @@ def _illustrateAllPeriods(parsers):
         keywords = getAllKeywords(period)
         _illustrate_keywords(keywords,parsers)
 
+def getDfPeriod(periodid):
+    # get a data frame with columns that match only the corresponding period
+    df =pd.read_csv(TOP_HASHTAGS)
+    df = df[df.columns[df.columns.map(lambda x: periodid in x)]]
+    return df
 
 
 def getAllPeriods():
@@ -44,7 +47,7 @@ def getAllPeriods():
 
 
 def getAllKeywords(period):
-    '''recuperates all the most important keywords related to a period'''
+    '''retrives all the most important keywords related to a period'''
     df = pd.read_csv(TOP_HASHTAGS).sort_values('score '+period,ascending=False)
     return df[period].tolist()
 
@@ -63,7 +66,7 @@ def saveKeywordsIllustrations(keywords_infos):
 
 
 
-def _initHTMLCSSJSFiles():
+def buildtemplate():
     indexlines = []
     # read the template
     with open('../uitemplate.html', 'r') as template:
@@ -99,12 +102,20 @@ def _illustrate_keywords(keywords : list[str],parsers : list[ImageParser],save_i
     # loads all the new images in the images folder
     keywords_infos = []
     for keyword in list(keywords_url.keys()):
-        url = keywords_url[keyword]
-        illustration = ''
-        if  len(url)>0: # On sauve l'image si on a trouvé une url
-            illustration = _imagenameformat(url, keyword)
-            if not os.path.exists(UI_FOLDER+'/images/' + illustration):
-               illustration= saveImage(url, keyword,both=True)
+        if keyword in keywords_existing_illustrations:
+            url = keywords_existing_illustrations[keyword]['url']
+            illustration = keywords_existing_illustrations[keyword]['illustration']
+        else :
+            url = keywords_url[keyword]
+            illustration = ''
+            if  len(url)>0: # On sauve l'image si on a trouvé une url
+              illustration = _imagenameformat(url, keyword)
+              if not os.path.exists(UI_FOLDER+'/images/' + illustration):
+                im_saved = saveImage(url, keyword,both=True)
+                if im_saved!=None : illustration= im_saved
+                else : 
+                    url =''
+                    illustration=''
         keywords_infos.append({
             "keyword":keyword,
             "url":url,
@@ -132,11 +143,15 @@ def _imagenameformat(url,imagename=None,background=False):
     returns the appropriate name for an image to save
     '''
     sp= imagelib.imageNameFromUrl(url)
+    # some url do not end with extension name, we suppose they are correct and so we add .png
+    if(len(sp)==1):
+        sp.append('png')
+        print(sp)
     if imagename: sp[0]=imagename
-    imagename.replace('%','_').replace(' ','_') #file name cannot have '%' in their names
     # we convert automatically the image in png if the bg is removed
     if not background: sp[1]='png'
     imagename = sp[0]+'.'+sp[1]
+    imagename =imagename.replace('%','_').replace(' ','_') #file name cannot have '%' in their names
     return imagename
 
 
@@ -148,12 +163,16 @@ def saveImage(url : str,imagename=None,background=False,both=False):
     if both is true, it saves the image with AND without the bg
     """
     img = imagelib.loadimage(url)
+    
+    if img ==None:
+        return None
     root = UI_FOLDER+"/images/"
     if  background or both:
         fullname = _imagenameformat(url,imagename,False)
         imagelib.saveImage(img,root+fullname)
     if not background or both:
         img_nobg = imagelib.rembg(img)
-        fullname = _imagenameformat(url,imagename+'_cropped',False)
-        imagelib.saveImage(img_nobg,root+fullname)
+        croppedname = _imagenameformat(url,imagename+'_cropped',False)
+        imagelib.saveImage(img_nobg,root+croppedname)
     return fullname
+    

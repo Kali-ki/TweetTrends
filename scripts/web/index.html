@@ -11,14 +11,23 @@ background: rgb(136, 210, 222);
 color: white;
 font-family: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
 }
-img {
+#keywordslist img {
 height: 100px;
+cursor: pointer;
 }
 #keywordslist{
+margin: 2em;
 display: flex;
 flex-wrap: wrap;
 align-items: center;
 gap: 2em;
+justify-content: space-around;
+}
+#dynamic-plot{
+display: flex;
+align-items: center;
+justify-content: center;
+margin: 2em;
 }
 .image-selector {
 display: none;
@@ -27,6 +36,12 @@ display: none;
 display: flex;
 flex-direction: column;
 align-items: center;
+border: 3px solid white ;
+border-radius: 10px;
+padding:1em;
+}
+a {
+color: white;
 }
 </style>
 </head>
@@ -53,13 +68,22 @@ align-items: center;
 <div id="keywordslist">
 
 </div>
+<div id="dynamic-plot">
+<img src="hashtags_evolution.png">
+</div>
 <script type="text/javascript">
+
+let currentperiodid = document.getElementById('periods').value;
+
+changePeriodJs(currentperiodid);
+
 document.getElementById('periods').addEventListener('change',(evt)=>{
 changePeriodJs(evt.target.value)
 })
 
 eel.expose(changePeriodJs);
 function changePeriodJs(periodid){
+currentperiodid=periodid
 eel.loadPeriodPy(periodid)
 }
 
@@ -68,15 +92,20 @@ function loadPeriodJs(keywords) {
 let el = document.getElementById('keywordslist');
 el.innerHTML = '';
 el.hidden=true;
-for(let keyword of keywords){
+for(let i in keywords){
+let keyword = keywords[i];
 let id = keyword.split(" ").join("-");
 const vignette = document.createElement('div');
 vignette.className='vignette';
-vignette.innerHTML='<div class="illustration"> <label for="file-upload-'+id+'"><img src="images/emptyimage.svg"></label> <input class="image-selector"  id="file-upload-'+id+'"  type="file" accept="image/png, image/jpeg" onchange=" changeImageFromInputEvent(event)"> </div><div class="description">'+keyword+'</div>';
+const vignette_content = '<div class="illustration"> <label for="file-upload-'+id+'"><img src="images/emptyimage.svg"></label> <input class="image-selector"  id="file-upload-'+id+'"  type="file" accept="image/png, image/jpeg" onchange=" changeImageFromInputEvent(event,'+'\''+keyword+'\''+')"> </div><div class="description">#'+i+' '+keyword+'</div>'
+vignette.innerHTML=vignette_content;
 vignette.innerHTML+='</div>';
+vignette.onmouseover = (evt)=>{
+console.log(evt)
+}
 el.appendChild(vignette);
 }
-eel.illustratePeriodPy(keywords);
+eel.illustratePeriodPy(currentperiodid,keywords);
 el.hidden=false;
 }
 
@@ -84,27 +113,49 @@ eel.expose(illustratePeriodJs);
 function illustratePeriodJs(periodinfos){
 for(let keywordinfo of periodinfos){
 let id = 'file-upload-'+keywordinfo.keyword.split(" ").join("-");
-if(keywordinfo.illustration.length>0){
-if(document.getElementById('crop-check').checked)keywordinfo.illustration =keywordinfo.keyword+'_cropped.png';
-fetch('images/'+(keywordinfo.illustration)).then(response => response.blob()).then(blob=>{
 let input = document.getElementById(id);
 let label = input.parentElement.childNodes[1];
+if(keywordinfo.illustration.length>0){
+let illustration = keywordinfo.illustration;
+if(document.getElementById('crop-check').checked)illustration =cropppedName(illustration);
+fetch('images/'+(illustration)).then(response => response.blob()).then(blob=>{
 label.innerHTML = '';
 changeImage(label,blob);
 })
 }
+let description = label.parentElement.parentElement.childNodes[1]
+let content_description = description.innerHTML
+description.innerHTML = '<a href="'+keywordinfo.link+'" target="_blank">'+content_description+'</a>';
 }
+
+}
+
+function cropppedName(filename) {
+let parts = filename.split('.');
+let extension = parts.pop();
+let baseName = parts.join('.');
+let newFilename = baseName + '_cropped.png';
+return newFilename;
 }
 
 
-function changeImageFromInputEvent(evt){
+async function changeImageFromInputEvent(event,keyword){
 const file = event.target.files[0];
-if (file) {
+if(file){
 const blob = new Blob([file], { type: file.type });
-let label = evt.srcElement.parentElement.childNodes[1];
-labek.innerHTML='';
+let label = event.srcElement.parentElement.childNodes[1];
+label.innerHTML='';
 changeImage(label,blob);
+let reader = new FileReader();
+reader.onloadend = function() {
+let dataURL = reader.result; // Data URL or Base64 string
+// Call the Python function with the dataURL as an argument
+eel.saveExternalfile(keyword,file.name,dataURL);
+eel.changePeriodJs(currentperiodid)
 }
+reader.readAsDataURL(file);
+}
+
 }
 
 function changeImage(parent,blob){
@@ -114,25 +165,7 @@ parent.appendChild(img)
 }
 
 document.getElementById('crop-check').addEventListener('change',(evt)=>{
-let checked = evt.currentTarget.checked;
-let labels =Array.from(document.getElementById('keywordslist').getElementsByTagName('label'));
-fetch("keywords_illustration.json").then(res=>res.json()).then(allkeywordsinfo=>{
-for (let label of labels){
-let id = label.getAttribute('for')
-let keyword = label.getAttribute('for').replace('file-upload-',"")
-let path = 'images/'+allkeywordsinfo[keyword].illustration;
-if(checked)path ='images/'+keyword+'_cropped.png';
-if(allkeywordsinfo[keyword].illustration.length>0){
-fetch(path).then(response => response.blob()).then(blob=>{
-let input = document.getElementById(id);
-let label = input.parentElement.childNodes[1];
-label.innerHTML = '';
-changeImage(label,blob);
-})
-}
-}
-})
-
+changePeriodJs(currentperiodid)
 })
 </script>
 </body>

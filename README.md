@@ -7,7 +7,7 @@ TweetTrends is a data engineering project to :
 
 ## Description
 
-This project is a data engineering project. The goal is to create an application that uses most used hashtags on Twitter from 2010 to 2022 and do visualizations on them. This way, we can see the evolution of subject on Twitter over the years. This is interresting beaucause, often, it well represents the news of the year. However, it is not a perfect representation of the news because there is a lot of companies that use Twitter to promote their products or also people who are talking about their life.
+This project is a data engineering project. The goal is to create an application that uses most used hashtags on Twitter from 2010 to 2022 and do visualizations on them, in the manner of [this page](https://www.visualcapitalist.com/20-years-of-top-trending-google-searches/), that was about top google searches. This way, we can see the evolution of subject on Twitter over the years. This is interesting because,  it often well represents the news of the year. However, it is not a perfect representation of them because many companies use Twitter to promote their products, and people who are talking about their life, without any link to the news.
 
 ## Requirements
 
@@ -21,8 +21,10 @@ pip install -r requirements.txt
 ```
 
 ## Use the application
-
-TODO
+The main entrypoint of the application is **app.py**.
+```bash
+python app.py
+```
 
 ## Development
 
