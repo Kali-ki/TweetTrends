@@ -7,7 +7,6 @@ TweetTrends is a data engineering project to :
 ![UI](assets/ui_1.png)
 
 - 📷 Visualize with images the most used hashtags on Twitter from 2010 to 2022
-- 🔎 Plot dynamicaly graphs on the evolution of most used hashtags in date range or for a specific hashtags
 
 ![UI](assets/ui_2.png)
 
