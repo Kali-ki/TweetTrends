@@ -11,7 +11,7 @@ This project is a data engineering project. The goal is to create an application
 
 ## Requirements
 
-- `Python 3`
+- `Python >= 3.9`
 - `pip`
 
 Install all the required libraries with :
@@ -21,7 +21,9 @@ pip install -r requirements.txt
 ```
 
 ## Use the application
+
 The main entrypoint of the application is **app.py**.
+
 ```bash
 python app.py
 ```
@@ -80,7 +82,7 @@ The next step is to visualize the data. To do that, we used a Python script : [p
 - The date range to visualize
 - If we want to get only french hashtags (hashtags with french context)
 
-In output, thanks to Matplotlib and Pandas, we get a graph with the evolution of the hashtags over the years : 
+In output, thanks to Matplotlib and Pandas, we get a graph with the evolution of the hashtags over the years :
 
 ![Graph](assets/plot_example.png)
 
