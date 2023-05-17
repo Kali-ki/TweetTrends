@@ -84,4 +84,4 @@ def startui():
    def close(route,sockets):
        exit()
 
-   eel.start('index.html', close_callback=close,size=(700,700), mode='chrome')
+   eel.start('index.html', close_callback=close,size=(700,700), mode='default')

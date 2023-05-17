@@ -25,7 +25,7 @@ def _createImagesFolder():
     destination_path = UI_FOLDER+'/images/emptyimage.svg'
     shutil.copy(source_path, destination_path)
     source_path = '../images/hashtags_evolution.png'
-    destination_path = UI_FOLDER+'/hashtags_evolution.png'
+    destination_path = UI_FOLDER+'/hashtags_evolution_default.png'
     shutil.copy(source_path, destination_path)
 
 def _illustrateAllPeriods(parsers):
