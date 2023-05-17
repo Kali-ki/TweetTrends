@@ -30,10 +30,11 @@ HASHTAGS_TO_DROP = ["CONCOURS", "RT", "FB", "FF", "LT", "ON", "LRT", "FACEBOOK"]
 
 def plot(NUMBER_TWEETS_TO_KEEP=NUMBER_TWEETS_TO_KEEP, 
          SEARCHED_HASHTAGS=SEARCHED_HASHTAGS, 
-         FR_ONLY=FR_ONLY, DATE_START_T=DATE_START_T, 
+         FR_ONLY=FR_ONLY,
+         DATE_START_T=DATE_START_T,
          DATE_END_T=DATE_END_T, 
-         DATE_START_V=DATE_START_V, 
-         DATE_END_V=DATE_END_V, 
+         DATE_START_V=DATE_START_V,
+         DATE_END_V=DATE_END_V,
          HASHTAGS_TO_DROP=HASHTAGS_TO_DROP):
 
     # --- Parameters Check ----------------------------------------------------------------------------
