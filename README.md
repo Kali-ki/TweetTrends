@@ -2,29 +2,27 @@
 
 TweetTrends is a data engineering project to :
 
-- 🔎 Plot dynamicly graphs on the evolution of most used hashtags in date range or for a specific hashtags :
+- 🔎 Plot dynamically graphs on the evolution of most used hashtags in date range or for a specific hashtags :
 
-![UI](assets/ui_1.png)
+![image](https://github.com/Kali-ki/TweetTrends/assets/62034725/5833ff13-b49e-427d-9863-6fc9d8207184)
 
-- 📷 Visualize with images the most used hashtags on Twitter from 2010 to 2022
+- 📷 Visualize with images the most used hashtags on Twitter from 2010 to 2022 (with or without background)
 
-![UI](assets/ui_2.png)
+![image](https://github.com/Kali-ki/TweetTrends/assets/62034725/400d42d2-71bc-4279-b793-24c78c29a637)
+
 
 ## Description
 
 This project is a data engineering project. The goal is to create an application that uses most used hashtags on Twitter from 2010 to 2022 and do visualizations on them, in the manner of [this page](https://www.visualcapitalist.com/20-years-of-top-trending-google-searches/), that was about top google searches. This way, we can see the evolution of subject on Twitter over the years. This is interesting because,  it often well represents the news of the year. However, it is not a perfect representation of them because many companies use Twitter to promote their products, and people who are talking about their life, without any link to the news.
 
 ## Requirements
-
 - `Python >= 3.9`
 - `pip`
 
 Install all the required libraries with :
-
 ```bash
 pip install -r requirements.txt
 ```
-
 We advice you to have a chromium browser. [Eel](https://github.com/python-eel/Eel) (the library used as UI) works better in this configuration.
 
 ## Use the application
@@ -32,7 +30,6 @@ We advice you to have a chromium browser. [Eel](https://github.com/python-eel/Ee
 The main entrypoint of the application is **app.py**.
 
 ```bash
-cd scripts/
 python app.py
 ```
 
@@ -95,6 +92,12 @@ The next step is to visualize the data. To do that, we used a Python script : [p
 In output, thanks to Matplotlib and Pandas, we get a graph with the evolution of the hashtags over the years :
 
 ![Graph](assets/plot_example.png)
+
+### 🖼️ Image parsing
+One the goal of the project was to automatically illustrate keywords. For that, we created 'ImageParser' objects, that aim to find links that illustrate a keyword (find more about it in the scripts/imagelib.py to see the abstract class that defines a parser). 
+At first, we tried to use the [Wikipedia API](https://pypi.org/project/Wikipedia-API/), but we add many cases where no image was found (see more in scripts/wikiparser.py).
+Then we created the [GImageSerpApiParser](scripts/gimageserpapiparser.py), that finds images with Google Images. It is very efficient, but has a restricted number of api requests, and you need a token. See more about it on [serpapi.com](https://serpapi.com/).  
+
 
 ## Structure of the project
 
