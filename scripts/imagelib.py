@@ -24,16 +24,17 @@ def loadimage(url : str):
     url : the url of an image (the filename is in this url)
     return  : the loaded image
     '''
-    extension  = imageNameFromUrl(url)[1]
-    res = requests.get(url, stream = True)
-    if res.status_code == 200 or res.status_code==403:
-        opener=urllib.request.build_opener()
-        opener.addheaders=[('User-Agent','Mozilla/5.0 (Windows NT 6.1; WOW64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/36.0.1941.0 Safari/537.36')]
-        urllib.request.install_opener(opener)
-        name,http =  urllib.request.urlretrieve(url)
-        img = Image.open(name)
-        return img
-    return None
+    try :
+        res = requests.get(url, stream = True)
+        if res.status_code == 200 or res.status_code==403:
+            opener=urllib.request.build_opener()
+            opener.addheaders=[('User-Agent','Mozilla/5.0 (Windows NT 6.1; WOW64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/36.0.1941.0 Safari/537.36')]
+            urllib.request.install_opener(opener)
+            name,http =  urllib.request.urlretrieve(url)
+            img = Image.open(name)
+            return img
+    except:
+        return None
 
 
 def showImage(img : Image):

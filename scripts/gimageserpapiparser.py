@@ -10,7 +10,10 @@ class GImageSerpApiParser(ImageParser):
 
     def _get_google_image_link(self, search, lang='fr'):
         results = self._search_google_image(search, lang)
-        return self._remove_query_string_from_url(results[0]["original"])
+        if len(results)>0:
+            return self._remove_query_string_from_url(results[0]["original"])
+        else : 
+            return ''
 
     def _search_google_image(self, keyword: str, lang='fr'):
         params = {
@@ -23,8 +26,10 @@ class GImageSerpApiParser(ImageParser):
         }
         search = GoogleSearch(params)
         results = search.get_dict()
-        images_results = results["images_results"]
-        return images_results
+        if "images_results" in results:
+            images_results = results["images_results"]
+            return images_results
+        else :return []
 
     def _remove_query_string_from_url(self, url):
         if '?' in url:

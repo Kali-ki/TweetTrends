@@ -17,7 +17,7 @@ SERPAPITOKEN = json.load(open('../config.json'))['SERPAPITOKEN']
 ###################
 
 def startui():
-   uibuilder.build([WikiParser,GImageSerpApiParser(SERPAPITOKEN)])
+   uibuilder.build([GImageSerpApiParser(SERPAPITOKEN),WikiParser])
 #    uibuilder.buildtemplate()
    eel.init(UI_FOLDER)  
    @eel.expose

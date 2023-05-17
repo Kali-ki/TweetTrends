@@ -43,9 +43,9 @@ def getAllPeriods():
 
 def getAllKeywords(period):
     '''recuperates all the most important keywords related to a period'''
-    # df = pd.read_csv(TOP_HASHTAGS).sort_values('score '+period,ascending=False)
-    # return df[period].tolist()
-    return ['Vincent COllet','Super Man','Mario']
+    df = pd.read_csv(TOP_HASHTAGS).sort_values('score '+period,ascending=False)
+    return df[period].tolist()
+    # return ['Vincent COllet','Super Man','Mario']
 
 
 def getSavedKeywordsIllustrations():
@@ -107,7 +107,11 @@ def _illustrate_keywords(keywords : list[str],parsers : list[ImageParser],save_i
             if  len(url)>0: # On sauve l'image si on a trouvé une url
               illustration = _imagenameformat(url, keyword)
               if not os.path.exists(UI_FOLDER+'/images/' + illustration):
-                illustration= saveImage(url, keyword,both=True)
+                im_saved = saveImage(url, keyword,both=True)
+                if im_saved!=None : illustration= im_saved
+                else : 
+                    url =''
+                    illustration=''
         keywords_infos.append({
             "keyword":keyword,
             "url":url,
@@ -135,6 +139,10 @@ def _imagenameformat(url,imagename=None,background=False):
     returns the appropriate name for an image to save
     '''
     sp= imagelib.imageNameFromUrl(url)
+    # some url do not end with extension name, we suppose they are correct and so we add .png
+    if(len(sp)==1):
+        sp.append('png')
+        print(sp)
     if imagename: sp[0]=imagename
     # we convert automatically the image in png if the bg is removed
     if not background: sp[1]='png'
@@ -151,6 +159,9 @@ def saveImage(url : str,imagename=None,background=False,both=False):
     if both is true, it saves the image with AND without the bg
     """
     img = imagelib.loadimage(url)
+    
+    if img ==None:
+        return None
     root = UI_FOLDER+"/images/"
     if  background or both:
         fullname = _imagenameformat(url,imagename,False)
