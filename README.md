@@ -90,6 +90,8 @@ The next step is to visualize the data. To do that, we used a Python script : [p
 - The date range to visualize
 - If we want to get only french hashtags (hashtags with french context)
 
+*The granularity of the date range is the year, but with somes modifications, it can be changed to month or even to day.*
+
 In output, thanks to Matplotlib and Pandas, we get a graph with the evolution of the hashtags over the years :
 
 ![Graph](assets/plot_example.png)
@@ -132,5 +134,7 @@ Except this, the project has not been really limited by anything else.
 According to the previous part, the main improvement would be to use another source of data. The Twitter API is probably the best solution if it is possible to pay for it. Otherwise, we can try to find another Twitter user that tweets the most used hashtags every day, or an already existing dataset.
 
 Another possible improvement would be to merge the two scripts [process_tweets_data.py](scripts/tweets/process_tweets_data.py) and [plots_tweets.py](scripts/tweets/plots_tweets.py) to have only one script that does everything. This way, the image representation and the plot would present the same data.
+
+Also, the granularity of the data could be improved. Indeed, we only have the number of occurences of each hashtags per year. But, we could have the number of occurences per month or per day. This way, we could have a more precise representation of the evolution of the hashtags.
 
 And to finnish with the improvements, the UI could be a bit improved. For example, we could add a button to download the CSV file with the data of the plot or add more descriptions of each inputs.
