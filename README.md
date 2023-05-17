@@ -7,6 +7,7 @@ TweetTrends is a data engineering project to :
 ![UI](assets/ui_1.png)
 
 - 📷 Visualize with images the most used hashtags on Twitter from 2010 to 2022
+- 🔎 Plot dynamicaly graphs on the evolution of most used hashtags in date range or for a specific hashtags
 
 ![UI](assets/ui_2.png)
 
@@ -25,11 +26,14 @@ Install all the required libraries with :
 pip install -r requirements.txt
 ```
 
+We advice you to have a chromium browser. [Eel](https://github.com/python-eel/Eel) (the library used as UI) works better in this configuration.
+
 ## Use the application
 
 The main entrypoint of the application is **app.py**.
 
 ```bash
+cd scripts/
 python app.py
 ```
 
@@ -107,6 +111,10 @@ In output, thanks to Matplotlib and Pandas, we get a graph with the evolution of
 ┃ ┃ ┗ 📜 tweets_shaping.py
 ┃ ┃ ┗ 📜 plots_tweets.py
 ┃ ┃ ┗ 📜 scrap_tweets.py
+┃ ┣ 📜 app.py
+┃ ┣ 📜 ui.py
+┃ ┣ 📜 uibuilder.py
+┃ ┣ 📜 imagelib.py
 ┗ 📜 .gitignore
 ┗ 📜 README.md
 ┗ 📜 requirements.md
