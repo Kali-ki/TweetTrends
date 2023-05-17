@@ -11,9 +11,9 @@ import ast
 # --- Parameters ----------------------------------------------------------------------------------
 
 # NUMBER_TWEETS_TO_KEEP most popular hashtags
-NUMBER_TWEETS_TO_KEEP = 10 # Keep at 0 to disable
+NUMBER_TWEETS_TO_KEEP = 0 # Keep at 0 to disable
 # Search for the NUMBER_TWEETS_TO_KEEP hashtags
-SEARCHED_HASHTAGS = [] # Keep empty to disable
+SEARCHED_HASHTAGS = ["MACRON"] # Keep empty to disable
 
 FR_ONLY = True
 
@@ -169,9 +169,13 @@ def plot(NUMBER_TWEETS_TO_KEEP=NUMBER_TWEETS_TO_KEEP,
     plt.xlabel("Year")
     plt.ylabel("Number of occurences")
 
-    # Path to the CSV file
-    path = os.path.join(os.path.dirname(__file__), '../../images/hashtags_evolution.png')
-    # Save the figure
-    plt.savefig(path)
+    return plt
 
-    plt.show()
+    # # Path to the CSV file
+    # path = os.path.join(os.path.dirname(__file__), '../../images/hashtags_evolution.png')
+    # # Save the figure
+    # plt.savefig(path)
+
+    # plt.show()
+
+# plot()

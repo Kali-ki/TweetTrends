@@ -6,6 +6,8 @@ import imagelib
 from PIL import Image
 import json
 
+import tweets.plots_tweets as pt
+
 UI_FOLDER='web'
 TOP_HASHTAGS = '../data/tweets/most_used_hashtags.csv'
 
@@ -61,7 +63,12 @@ def startui():
        keywordinfo['score']= str(df.loc[df[periodid] ==  keywordinfo['keyword'], 'score '+periodid].values[0])
     eel.illustratePeriodJs(keywordsinfos)
 
+   @eel.expose
+   def plotPy():
+    plt = pt.plot()
+    plt.show()
 
    def close(route,sockets):
        exit()
-   eel.start('index.html',close_callback=close,size=(700,700))
+
+   eel.start('index.html',close_callback=close,size=(700,700),mode='chrome')

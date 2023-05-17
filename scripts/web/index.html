@@ -70,9 +70,9 @@ color: white;
 </div>
 <div id="dynamic-plot">
 <img src="hashtags_evolution.png">
+<button onclick="plot()">Plot</button>
 </div>
 <script type="text/javascript">
-
 let currentperiodid = document.getElementById('periods').value;
 
 changePeriodJs(currentperiodid);
@@ -108,7 +108,6 @@ el.hidden=false;
 
 eel.expose(illustratePeriodJs);
 function illustratePeriodJs(periodinfos){
-console.log(periodinfos)
 for(let keywordinfo of periodinfos){
 let id = 'file-upload-'+keywordinfo.keyword.split(" ").join("-");
 let input = document.getElementById(id);
@@ -173,6 +172,10 @@ parent.appendChild(img)
 document.getElementById('crop-check').addEventListener('change',(evt)=>{
 changePeriodJs(currentperiodid)
 })
+
+function plot(){
+eel.plotPy()
+}
 </script>
 </body>
 </html>

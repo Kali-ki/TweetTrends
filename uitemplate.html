@@ -58,9 +58,9 @@
       </div>
       <div id="dynamic-plot">
         <img src="hashtags_evolution.png">
+        <button onclick="plot()">Plot</button>
       </div>
     <script type="text/javascript">
-
         let currentperiodid = document.getElementById('periods').value;
 
         changePeriodJs(currentperiodid);
@@ -160,6 +160,10 @@
         document.getElementById('crop-check').addEventListener('change',(evt)=>{
             changePeriodJs(currentperiodid)
         })
+
+        function plot(){
+            eel.plotPy()
+        }
     </script>
 </body>
 </html>
