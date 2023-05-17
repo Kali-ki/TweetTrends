@@ -1,8 +1,6 @@
 import uibuilder
 import urllib.parse
 import eel
-from wikiparser import WikiParser
-from gimageserpapiparser import GImageSerpApiParser
 import base64
 import imagelib
 from PIL import Image
@@ -10,14 +8,16 @@ import json
 
 UI_FOLDER='web'
 TOP_HASHTAGS = '../data/tweets/most_used_hashtags.csv'
-SERPAPITOKEN = json.load(open('../config.json'))['SERPAPITOKEN']
+
 
 ####################
 #     INIT UI      #
 ###################
 
+def buildui(parsers):
+   uibuilder.build(parsers)
+
 def startui():
-   uibuilder.build([GImageSerpApiParser(SERPAPITOKEN),WikiParser])
 #    uibuilder.buildtemplate()
    eel.init(UI_FOLDER)  
    @eel.expose
