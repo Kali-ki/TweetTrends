@@ -9,6 +9,7 @@ pandas
 
 stweet==2.1.1 # For twitter scraping
 arrow==1.2.3 # For date manipulation
+matplotlib # For plotting
 
 pytrends
 google-search-results
