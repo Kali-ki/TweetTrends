@@ -58,6 +58,7 @@ def startui():
     for keywordinfo in keywordsinfos:
        df = uibuilder.getDfPeriod(periodid)
        keywordinfo['link']= df.loc[df[periodid] == keywordinfo['keyword'], 'context link '+periodid].values[0]
+       keywordinfo['score']= str(df.loc[df[periodid] ==  keywordinfo['keyword'], 'score '+periodid].values[0])
     eel.illustratePeriodJs(keywordsinfos)
 
 

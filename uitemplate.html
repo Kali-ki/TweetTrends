@@ -88,9 +88,6 @@
                 const vignette_content = '<div class="illustration"> <label for="file-upload-'+id+'"><img src="images/emptyimage.svg"></label> <input class="image-selector"  id="file-upload-'+id+'"  type="file" accept="image/png, image/jpeg" onchange=" changeImageFromInputEvent(event,'+'\''+keyword+'\''+')"> </div><div class="description">#'+i+' '+keyword+'</div>'
                 vignette.innerHTML=vignette_content;
                 vignette.innerHTML+='</div>';
-                vignette.onmouseover = (evt)=>{
-                    console.log(evt)
-                }
                 el.appendChild(vignette);
             }
             eel.illustratePeriodPy(currentperiodid,keywords);
@@ -111,9 +108,17 @@
                         changeImage(label,blob);
                     })
                 }
-                let description = label.parentElement.parentElement.childNodes[1]
+                let vignette = label.parentElement.parentElement
+                let description = vignette.childNodes[1]
                 let content_description = description.innerHTML
-                description.innerHTML = '<a href="'+keywordinfo.link+'" target="_blank">'+content_description+'</a>';
+                content_description = '<a href="'+keywordinfo.link+'" target="_blank">'+content_description+'</a>';
+                description.innerHTML=content_description;
+                vignette.onmouseover = (evt)=>{
+                    description.childNodes[0].innerHTML=keywordinfo.score;
+                }
+                vignette.onmouseleave = (evt)=>{
+                    description.innerHTML=content_description;
+                }
             }
 
         }
