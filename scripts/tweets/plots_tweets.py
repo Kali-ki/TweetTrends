@@ -11,22 +11,30 @@ import ast
 # --- Parameters ----------------------------------------------------------------------------------
 
 # NUMBER_TWEETS_TO_KEEP most popular hashtags
-# NUMBER_TWEETS_TO_KEEP -> Keep at 0 to disable
+NUMBER_TWEETS_TO_KEEP = 10 # Keep at 0 to disable
 # Search for the NUMBER_TWEETS_TO_KEEP hashtags
-# SEARCHED_HASHTAGS -> Keep empty to disable
+SEARCHED_HASHTAGS = [] # Keep empty to disable
+
+FR_ONLY = True
 
 # Date range for top NUMBER_TWEETS_TO_KEEP tweets
-# DATE_START_T >= 2010
-# DATE_END_T <= 2022
+DATE_START_T = 2010 # >= 2010
+DATE_END_T = 2022 # <= 2022
 
 # Date range for visualization
- # DATE_START_V >= 2010
-# DATE_END_V <= 2022
+DATE_START_V = 2010 # >= 2010
+DATE_END_V = 2022 # <= 2022
 
 # Hashtags to drop
 HASHTAGS_TO_DROP = ["CONCOURS", "RT", "FB", "FF", "LT", "ON", "LRT", "FACEBOOK"]
 
-def plot_graph(NUMBER_TWEETS_TO_KEEP=10, SEARCHED_HASHTAGS=[], FR_ONLY=True, DATE_START_T=2010, DATE_END_T=2022, DATE_START_V=2010, DATE_END_V=2022, HASHTAGS_TO_DROP=["CONCOURS", "RT", "FB", "FF", "LT", "ON", "LRT", "FACEBOOK"]):
+def plot(NUMBER_TWEETS_TO_KEEP=NUMBER_TWEETS_TO_KEEP, 
+         SEARCHED_HASHTAGS=SEARCHED_HASHTAGS, 
+         FR_ONLY=FR_ONLY, DATE_START_T=DATE_START_T, 
+         DATE_END_T=DATE_END_T, 
+         DATE_START_V=DATE_START_V, 
+         DATE_END_V=DATE_END_V, 
+         HASHTAGS_TO_DROP=HASHTAGS_TO_DROP):
 
     # --- Parameters Check ----------------------------------------------------------------------------
 
@@ -167,5 +175,3 @@ def plot_graph(NUMBER_TWEETS_TO_KEEP=10, SEARCHED_HASHTAGS=[], FR_ONLY=True, DAT
     plt.savefig(path)
 
     plt.show()
-
-plot_graph()
