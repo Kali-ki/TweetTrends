@@ -2,8 +2,13 @@
 
 TweetTrends is a data engineering project to :
 
-- 🔎 Plot dynamicly graphs on the evolution of most used hashtags in date range or for a specific hashtags
+- 🔎 Plot dynamicly graphs on the evolution of most used hashtags in date range or for a specific hashtags :
+
+![UI](assets/ui_1.png)
+
 - 📷 Visualize with images the most used hashtags on Twitter from 2010 to 2022
+
+![UI](assets/ui_2.png)
 
 ## Description
 
@@ -118,3 +123,5 @@ Except this, the project has not been really limited by anything else.
 ### 🚧 Improvements
 
 According to the previous part, the main improvement would be to use another source of data. The Twitter API is probably the best solution if it is possible to pay for it. Otherwise, we can try to find another Twitter user that tweets the most used hashtags every day, or an already existing dataset.
+
+Another possible improvement would be to merge the two scripts [process_tweets_data](scripts/tweets/process_tweets_data.py) and [plots_tweets.py](scripts/tweets/plots_tweets.py) to have only one script that does everything. This way, the image representation and the plot would present the same data.
