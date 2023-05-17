@@ -1,14 +1,20 @@
+# External libraries
 import pandas as pd
 import os
 import shutil
-from imagelib import ImageParser
-import imagelib
-from imagelib import ImageParser
 import json
 
+# Local libraries
+from scripts.imagelib import ImageParser
+import scripts.imagelib as imagelib
+from scripts.imagelib import ImageParser
 
-TOP_HASHTAGS = '../data/tweets/most_used_hashtags.csv'
+
+TOP_HASHTAGS = 'data/tweets/most_used_hashtags.csv'
 UI_FOLDER='web'
+TEMPLATE_LOCATION='uitemplate.html'
+EMPTY_IMAGE_SRC_LOCATION = 'images/emptyimage.svg'
+BASIC_PLOT_EVOLUTION_LOCATION = 'images/hashtags_evolution.png'
 
 
 
@@ -21,10 +27,10 @@ def build(parsers):
 
 def _createImagesFolder():
     if not os.path.exists(UI_FOLDER+"/images"):  os.mkdir(UI_FOLDER+'/images')
-    source_path = '../images/emptyimage.svg'
+    source_path = EMPTY_IMAGE_SRC_LOCATION
     destination_path = UI_FOLDER+'/images/emptyimage.svg'
     shutil.copy(source_path, destination_path)
-    source_path = '../images/hashtags_evolution.png'
+    source_path = BASIC_PLOT_EVOLUTION_LOCATION
     destination_path = UI_FOLDER+'/hashtags_evolution_default.png'
     shutil.copy(source_path, destination_path)
 
@@ -72,7 +78,7 @@ def saveKeywordsIllustrations(keywords_infos):
 def buildtemplate():
     indexlines = []
     # read the template
-    with open('../uitemplate.html', 'r') as template:
+    with open(TEMPLATE_LOCATION, 'r') as template:
         for line in template:
             if '<!--datestopropose-->' in line:
                 # create dropdown list containing all the available periods

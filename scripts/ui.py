@@ -1,14 +1,16 @@
-import uibuilder
-import eel
+# External libraries
+import eel 
 import base64
-import imagelib
 from PIL import Image
 
-import tweets.plots_tweets as pt
+# Local libraries
+import scripts.uibuilder as uibuilder
+import scripts.imagelib as imagelib
+import scripts.tweets.plots_tweets as pt
 
 UI_FOLDER='web'
-TOP_HASHTAGS = '../data/tweets/most_used_hashtags.csv'
-
+TOP_HASHTAGS = 'data/tweets/most_used_hashtags.csv'
+BROWSER_INFO = 'chrome' #firefox
 
 ####################
 #     INIT UI      #
@@ -84,4 +86,4 @@ def startui():
    def close(route,sockets):
        exit()
 
-   eel.start('index.html', close_callback=close,size=(700,700), mode='default')
+   eel.start('index.html', close_callback=close,size=(700,700), mode=BROWSER_INFO)

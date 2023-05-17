@@ -1,5 +1,7 @@
+# EXTERNAL LIBRARIES
 from serpapi import GoogleSearch
-from imagelib import ImageParser
+# LOCAL LIBRAIRIES
+from scripts.imagelib import ImageParser
 
 class GImageSerpApiParser(ImageParser):
     def __init__(self, apikey):
