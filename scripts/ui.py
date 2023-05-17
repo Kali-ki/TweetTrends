@@ -1,10 +1,8 @@
 import uibuilder
-import urllib.parse
 import eel
 import base64
 import imagelib
 from PIL import Image
-import json
 
 import tweets.plots_tweets as pt
 
@@ -71,4 +69,4 @@ def startui():
    def close(route,sockets):
        exit()
 
-   eel.start('index.html',close_callback=close,size=(700,700),mode='chrome')
+   eel.start('index.html', close_callback=close,size=(700,700), mode='default')
