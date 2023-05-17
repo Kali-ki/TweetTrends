@@ -23,7 +23,7 @@
             gap: 2em;
             justify-content: space-around;
         }
-        #dynamic-plot{
+        #dynamic-plot, #last-decades{
             display: flex;
             align-items: center;
             justify-content: center;
@@ -31,6 +31,23 @@
             flex-direction: column;
             gap: 1em;
         }
+        .params {
+            display: flex;
+            gap: 1em;
+            flex-wrap: wrap;
+        }
+        img {
+            border-radius: 20px;
+        }
+        input,select {
+            border: 0px;
+            border-radius: 5px;
+            padding: .5em;
+        }
+        input[type="number"]{
+            width: 9em;
+        }
+
         .image-selector {
             display: none;
         }
@@ -45,33 +62,54 @@
         a {
             color: white;
         }
+        button {
+            border-radius: 20px;
+            background-color: white;
+            color:rgb(136, 210, 222);
+            font-size: 1.5em;
+            padding: .5em;
+            font-weight: bold;
+            border: 0px;
+            cursor: pointer;
+        }
+        button:hover{
+            background-color:rgb(136, 159, 222);
+            color:white;
+        }
+
     </style>
 </head>
 
 <body>
-    <h1>Trends timeline</h1>
-    <select name="periods" id="periods">
-        <!--datestopropose-->
-      </select>
-      <input type="checkbox" id="crop-check" checked>
-      <label>Supprimer arrière-plan</label>
-      <div id="keywordslist">
-      </div>
-      <div id="dynamic-plot">
-          <div class="params">
-              <input type='number' placeholder="NB TWEETS TO KEEP" id="plot-nb-tweets-to-keep" value="10">
-              <input type="text" placeholder="SEARCHED HASHTAGS" id="plot-searched-hashtags">
-              <label for="plot-fr-only">FR ONLY</label>
-              <input type="checkbox" id="plot-fr-only" checked>
-              <input type="number" placeholder="DATE START T" min="2010" max="2022" step="1" id="plot-date-start-t" value="2010"/>
-              <input type="number" placeholder="DATE END T" min="2010" max="2022" step="1" id="plot-date-end-t" value="2022"/>
-              <input type="number" placeholder="DATE START V" min="2010" max="2022" step="1" id="plot-date-start-v" value="2010"/>
-              <input type="number" placeholder="DATE END V" min="2010" max="2022" step="1" id="plot-date-end-v" value="2022"/>
-              <input type="text"  placeholder="HASHTAGS TO DROP" id="plot-hashtags-to-drop">
-              <button onclick="plot()">Plot</button>
-          </div>
+    <h1>TweetTrends</h1>
+    <div id="dynamic-plot">
+        <h2>Explore Evolutions</h2>
+        <div class="params">
+            <input type='number' placeholder="NB TWEETS TO KEEP" id="plot-nb-tweets-to-keep" value="10">
+            <input type="text" placeholder="SEARCHED HASHTAGS" id="plot-searched-hashtags">
+            <label for="plot-fr-only">FR ONLY</label>
+            <input type="checkbox" id="plot-fr-only" checked>
+            <input  type="number" width="13" placeholder="DATE START T" title="DATE START T" min="2010" max="2022" step="1" id="plot-date-start-t" value="2010"/>
+            <input type="number" width="13" placeholder="DATE END T" title="DATE END T" min="2010" max="2022" step="1" id="plot-date-end-t" value="2022"/>
+            <input type="number" width="13" placeholder="DATE START V" title="DATE START V" min="2010" max="2022" step="1" id="plot-date-start-v" value="2010"/>
+            <input type="number" width="13" placeholder="DATE END V" title="DATE END V" min="2010" max="2022" step="1" id="plot-date-end-v" value="2022"/>
+            <input type="text"  placeholder="HASHTAGS TO DROP" id="plot-hashtags-to-drop">
+            <button onclick="plot()">Plot</button>
+        </div>
         <img id="hashtags_evolution.png" src="hashtags_evolution_default.png">
-      </div>
+    </div>
+    <div id="last-decades">
+        <h2>The last decades in pictures </h2>
+        <div class="params">
+            <select name="periods" id="periods">
+                <!--datestopropose-->
+              </select>
+              <input type="checkbox" id="crop-check" checked>
+              <label>Supprimer arrière-plan</label>
+        </div>
+        <div id="keywordslist">
+          </div>
+    </div>
     <script type="text/javascript">
         let currentperiodid = document.getElementById('periods').value;
 
