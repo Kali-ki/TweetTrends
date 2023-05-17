@@ -1,0 +1,258 @@
+<html>
+<head>
+<meta charset="UTF-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>TweetTrends</title>
+<script type="text/javascript" src="/eel.js"></script>
+<style>
+body {
+background: #5f9de9;
+color: white;
+font-family: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
+}
+#keywordslist img {
+height: 100px;
+cursor: pointer;
+}
+#keywordslist{
+margin: 2em;
+display: flex;
+flex-wrap: wrap;
+align-items: center;
+gap: 2em;
+justify-content: space-around;
+}
+#dynamic-plot, #last-decades{
+display: flex;
+align-items: center;
+justify-content: center;
+margin: 2em;
+flex-direction: column;
+gap: 1em;
+}
+.params {
+display: flex;
+gap: 1em;
+flex-wrap: wrap;
+align-items: center;
+}
+img {
+border-radius: 20px;
+}
+input,select {
+border: 0px;
+border-radius: 5px;
+padding: .5em;
+cursor: pointer;
+}
+input[type="number"]{
+width: 9em;
+}
+
+.image-selector {
+display: none;
+}
+.vignette {
+display: flex;
+flex-direction: column;
+align-items: center;
+border: 3px solid white ;
+border-radius: 10px;
+padding:1em;
+}
+a {
+color: white;
+}
+button {
+border-radius: 20px;
+background-color: white;
+color:#5f9de9;
+font-size: 1.5em;
+padding: .5em;
+font-weight: bold;
+border: 0px;
+cursor: pointer;
+}
+button:hover, input:hover,select:hover{
+background-color:rgb(136, 159, 222);
+color:white;
+}
+
+</style>
+</head>
+
+<body>
+<h1>TweetTrends</h1>
+<div id="dynamic-plot">
+<h2>Explore Evolutions</h2>
+<div class="params">
+<input type='number' placeholder="NB TWEETS TO KEEP" id="plot-nb-tweets-to-keep" value="10" title="NB TWEETS TO KEEP">
+<input type="text" placeholder="SEARCHED HASHTAGS" id="plot-searched-hashtags" title="SEARCHED HASHTAGS">
+<label for="plot-fr-only">FR ONLY</label>
+<input type="checkbox" id="plot-fr-only" title="FR ONLY" checked>
+<input  type="number" width="13" placeholder="DATE START T" title="DATE START T" min="2010" max="2022" step="1" id="plot-date-start-t" value="2010"/>
+<input type="number" width="13" placeholder="DATE END T" title="DATE END T" min="2010" max="2022" step="1" id="plot-date-end-t" value="2022"/>
+<input type="number" width="13" placeholder="DATE START V" title="DATE START V" min="2010" max="2022" step="1" id="plot-date-start-v" value="2010"/>
+<input type="number" width="13" placeholder="DATE END V" title="DATE END V" min="2010" max="2022" step="1" id="plot-date-end-v" value="2022"/>
+<input type="text"  placeholder="HASHTAGS TO DROP" id="plot-hashtags-to-drop" title="HASHTAGS TO DROP" value="
+CONCOURS,RT,FB,FF,LT,ON,LRT, FACEBOOK">
+<button onclick="plot()">Plot</button>
+</div>
+<img id="hashtags_evolution.png" src="hashtags_evolution_default.png">
+</div>
+<div id="last-decades">
+<h2>The last decades in pictures </h2>
+<div class="params">
+<select name="periods" id="periods">
+<option value="2010">2010</value>
+<option value="2011">2011</value>
+<option value="2012">2012</value>
+<option value="2013">2013</value>
+<option value="2014">2014</value>
+<option value="2015">2015</value>
+<option value="2016">2016</value>
+<option value="2017">2017</value>
+<option value="2018">2018</value>
+<option value="2019">2019</value>
+<option value="2020">2020</value>
+<option value="2021">2021</value>
+<option value="2022">2022</value>
+</select>
+<input type="checkbox" id="crop-check" >
+<label>Supprimer arrière-plan</label>
+</div>
+<div id="keywordslist">
+</div>
+</div>
+<script type="text/javascript">
+let currentperiodid = document.getElementById('periods').value;
+
+changePeriodJs(currentperiodid);
+
+document.getElementById('periods').addEventListener('change',(evt)=>{
+changePeriodJs(evt.target.value)
+})
+
+eel.expose(changePeriodJs);
+function changePeriodJs(periodid){
+currentperiodid=periodid
+eel.loadPeriodPy(periodid)
+}
+
+eel.expose(loadPeriodJs);
+function loadPeriodJs(keywords) {
+let el = document.getElementById('keywordslist');
+el.innerHTML = '';
+el.hidden=true;
+for(let i in keywords){
+let keyword = keywords[i];
+let id = keyword.split(" ").join("-");
+const vignette = document.createElement('div');
+vignette.className='vignette';
+const vignette_content = '<div class="illustration"> <label for="file-upload-'+id+'"><img src="images/emptyimage.svg"></label> <input class="image-selector"  id="file-upload-'+id+'"  type="file" accept="image/png, image/jpeg" onchange=" changeImageFromInputEvent(event,'+'\''+keyword+'\''+')"> </div><div class="description">#'+(parseInt(i)+1)+' '+keyword+'</div>'
+vignette.innerHTML=vignette_content;
+vignette.innerHTML+='</div>';
+el.appendChild(vignette);
+}
+eel.illustratePeriodPy(currentperiodid,keywords);
+el.hidden=false;
+}
+
+eel.expose(illustratePeriodJs);
+function illustratePeriodJs(periodinfos){
+for(let keywordinfo of periodinfos){
+let id = 'file-upload-'+keywordinfo.keyword.split(" ").join("-");
+let input = document.getElementById(id);
+let label = input.parentElement.childNodes[1];
+if(keywordinfo.illustration.length>0){
+let illustration = keywordinfo.illustration;
+if(document.getElementById('crop-check').checked)illustration =cropppedName(illustration);
+fetch('images/'+(illustration)).then(response => response.blob()).then(blob=>{
+label.innerHTML = '';
+changeImage(label,blob);
+})
+}
+let vignette = label.parentElement.parentElement
+let description = vignette.childNodes[1]
+let content_description = description.innerHTML
+content_description = '<a href="'+keywordinfo.link+'" target="_blank">'+content_description+'</a>';
+description.innerHTML=content_description;
+vignette.onmouseover = (evt)=>{
+description.childNodes[0].innerHTML=keywordinfo.score;
+}
+vignette.onmouseleave = (evt)=>{
+description.innerHTML=content_description;
+}
+}
+
+}
+
+function cropppedName(filename) {
+let parts = filename.split('.');
+let extension = parts.pop();
+let baseName = parts.join('.');
+let newFilename = baseName + '_cropped.png';
+return newFilename;
+}
+
+
+async function changeImageFromInputEvent(event,keyword){
+const file = event.target.files[0];
+if(file){
+const blob = new Blob([file], { type: file.type });
+let label = event.srcElement.parentElement.childNodes[1];
+label.innerHTML='';
+changeImage(label,blob);
+let reader = new FileReader();
+reader.onloadend = function() {
+let dataURL = reader.result; // Data URL or Base64 string
+// Call the Python function with the dataURL as an argument
+eel.saveExternalfile(keyword,file.name,dataURL);
+eel.changePeriodJs(currentperiodid)
+}
+reader.readAsDataURL(file);
+}
+
+}
+
+function changeImage(parent,blob){
+const img = document.createElement('img');
+img.src = URL.createObjectURL(blob);
+parent.appendChild(img)
+}
+
+document.getElementById('crop-check').addEventListener('change',(evt)=>{
+changePeriodJs(currentperiodid)
+})
+
+function plot(){
+let nb_tweets = parseInt(document.getElementById('plot-nb-tweets-to-keep').value);
+let searched_hashtags = parseStringList(document.getElementById('plot-searched-hashtags').value);
+let fr_only =  document.getElementById('plot-fr-only').checked;
+let date_start_t =  parseInt(document.getElementById('plot-date-start-t').value);
+let date_end_t =  parseInt(document.getElementById('plot-date-end-t').value);
+let date_start_v =  parseInt(document.getElementById('plot-date-start-v').value);
+let date_end_v =  parseInt(document.getElementById('plot-date-end-v').value);
+let hashtags_to_drop = parseStringList(document.getElementById('plot-hashtags-to-drop').value);
+eel.plotPy(nb_tweets,searched_hashtags,fr_only,date_start_t,date_end_t,date_start_v,date_end_v,hashtags_to_drop)
+}
+
+eel.expose(updatePlotImageJs);
+function updatePlotImageJs(){
+fetch('hashtags_evolution.png').then(response => response.blob()).then(blob=>{
+let dynamic_plot = document.getElementById('dynamic-plot')
+dynamic_plot.removeChild(dynamic_plot.getElementsByTagName('img')[0])
+changeImage(dynamic_plot,blob);
+})
+}
+
+function parseStringList(inputString) {
+return inputString.split(",").map(function(item) {
+return item.trim();
+});
+
+}
+</script>
+</body>
+</html>

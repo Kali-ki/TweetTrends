@@ -1,7 +1,9 @@
-from imagelib import ImageParser
+# EXTERNAL LIBRAIRIES
 import wikipedia
 import requests
 import json
+# LOCAL LIBRARIES
+from scripts.imagelib import ImageParser
 
 class WikiParser(ImageParser):
     def getImageLink(keyword:str)->str: 
