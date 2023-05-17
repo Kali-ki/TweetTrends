@@ -160,8 +160,9 @@ def plot(NUMBER_TWEETS_TO_KEEP=NUMBER_TWEETS_TO_KEEP,
     # --- Plot ----------------------------------------------------------------------------------------
 
     if(df.empty):
-        print("No tweets found")
-        exit()
+        plt.figure()
+        plt.title("No data to plot")
+        return plt
 
     # Plot the evolution of the most popular hashtags through the years
     df.plot()

@@ -46,8 +46,8 @@ The first step was to find a source for Twitter data. For that, we use all the t
 
 There are a few drawbacks to this method of using tweets of `TopHashtags` :
 
+- **The year 2014 is almost empty**
 - We don't have the number of occurences of each hashtags
-- The year 2014 is almost empty
 
 Despite these drawbacks, we decided to use this method because it was the easiest way to get the data.
 
@@ -131,4 +131,6 @@ Except this, the project has not been really limited by anything else.
 
 According to the previous part, the main improvement would be to use another source of data. The Twitter API is probably the best solution if it is possible to pay for it. Otherwise, we can try to find another Twitter user that tweets the most used hashtags every day, or an already existing dataset.
 
-Another possible improvement would be to merge the two scripts [process_tweets_data](scripts/tweets/process_tweets_data.py) and [plots_tweets.py](scripts/tweets/plots_tweets.py) to have only one script that does everything. This way, the image representation and the plot would present the same data.
+Another possible improvement would be to merge the two scripts [process_tweets_data.py](scripts/tweets/process_tweets_data.py) and [plots_tweets.py](scripts/tweets/plots_tweets.py) to have only one script that does everything. This way, the image representation and the plot would present the same data.
+
+And to finnish with the improvements, the UI could be a bit improved. For example, we could add a button to download the CSV file with the data of the plot or add more descriptions of each inputs.
