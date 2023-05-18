@@ -10,7 +10,6 @@ import scripts.tweets.plots_tweets as pt
 
 UI_FOLDER='web'
 TOP_HASHTAGS = 'data/tweets/most_used_hashtags.csv'
-BROWSER_INFO = 'chrome' #firefox
 
 ####################
 #     INIT UI      #
@@ -19,7 +18,7 @@ BROWSER_INFO = 'chrome' #firefox
 def buildui(parsers):
    uibuilder.build(parsers)
 
-def startui():
+def startui(browser='chrome'):
    uibuilder.buildtemplate()
    eel.init(UI_FOLDER)  
    @eel.expose
@@ -86,4 +85,4 @@ def startui():
    def close(route,sockets):
        exit()
 
-   eel.start('index.html', close_callback=close,size=(700,700), mode=BROWSER_INFO)
+   eel.start('index.html', close_callback=close,size=(700,700), mode=browser)

@@ -185,3 +185,12 @@ def saveImage(url : str,imagename=None,background=False,both=False):
         imagelib.saveImage(img_nobg,root+croppedname)
     return fullname
     
+
+########## IF YOU WANT TO BUILD THE UI FROM SCRATCH AGAIN ################
+##########    COPY-PASTE THE FOLLOWING LINES IN APP.PY    ################
+# import json
+# from scripts.wikiparser import WikiParser
+# from scripts.gimageserpapiparser import GImageSerpApiParser
+# SERPAPITOKEN = 'yourtoken' #REPLACE IT WITH YOUR API TOKEN 
+
+# ui.buildui([GImageSerpApiParser(SERPAPITOKEN),WikiParser])
