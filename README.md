@@ -94,9 +94,20 @@ In output, thanks to Matplotlib and Pandas, we get a graph with the evolution of
 ![Graph](assets/plot_example.png)
 
 ### 🖼️ Image parsing
-One the goal of the project was to automatically illustrate keywords. For that, we created 'ImageParser' objects, that aim to find links that illustrate a keyword (find more about it in the scripts/imagelib.py to see the abstract class that defines a parser). 
-At first, we tried to use the [Wikipedia API](https://pypi.org/project/Wikipedia-API/), but we add many cases where no image was found (see more in scripts/wikiparser.py).
-Then we created the [GImageSerpApiParser](scripts/gimageserpapiparser.py), that finds images with Google Images. It is very efficient, but has a restricted number of api requests, and you need a token. See more about it on [serpapi.com](https://serpapi.com/).  
+One the goal of the project was to automatically illustrate keywords. For that, we created 'ImageParser' objects, that aim to find links that illustrate a keyword (find more about it in the scripts/imagelib.py to see the abstract class that defines a parser). <br>
+At first, we tried to use the [Wikipedia API](https://pypi.org/project/Wikipedia-API/), but we add many cases where no image was found (see more in scripts/wikiparser.py). <br>
+Then we created the [GImageSerpApiParser](scripts/gimageserpapiparser.py), that finds images with Google Images. It is very efficient, but has a restricted number of api requests, and you need a token. See more about it on [serpapi.com](https://serpapi.com/).  <br>
+
+### ✂️ Background removal
+In order to improve the integration of the images in the application, we decided to remove their background. <br>
+However, since this task was not the core of the project, we did not want to spend too much time setting up the tools to achieve it. <br> 
+After some research, we found [rembg](https://github.com/danielgatis/rembg), a tool that suits our need, being easy to use and efficient enough. <br>
+
+### 🛠️ Application building
+All the elementary bricks of the project having been created, it was then a question of creating an interface allowing to easily visualize and interact with the elements previously mentioned.<br>
+Having experience in web, and appreciating the flexibility of HTML-CSS-JS in building interfaces, we decided to use [Eel](https://github.com/python-eel/Eel), that binds Python to web technologies.<br>
+During this phase, we used the ImageParsers to illustrate all the top hashtags of the last decade (data/tweets/most_used_hashtags.csv). <br>
+And we have graphically integrated the function of creating plots representing the evolution of the presence of keywords in the top tweets over the years.
 
 
 ## Structure of the project
@@ -114,21 +125,23 @@ Then we created the [GImageSerpApiParser](scripts/gimageserpapiparser.py), that 
 ┃ ┃ ┣ 📜 process_tweets_data.py
 ┃ ┃ ┗ 📜 tweets_shaping.py
 ┃ ┃ ┗ 📜 plots_tweets.py
-┃ ┃ ┗ 📜 scrap_tweets.py
-┃ ┣ 📜 app.py
+┃ ┃ ┗ 📜 scrap_tweets.py 
 ┃ ┣ 📜 ui.py
 ┃ ┣ 📜 uibuilder.py
 ┃ ┣ 📜 imagelib.py
+┃ ┣ 📜 gimageserpapiparser.py
+┃ ┣ 📜 wikiparser.py
 ┗ 📜 .gitignore
 ┗ 📜 README.md
 ┗ 📜 requirements.md
+┗ 📜 app.py
 ```
 
 ## Limitations and Improvements
 
 ### 🚫 Limitations
 
-The project has one big limitations : the data source. Indeed, we used the tweets of the Twitter user [TopHashtags](https://twitter.com/TopHashtags). And as said previously, there are a few drawbacks and limitations to this method.
+The project has one big limitation : the data source. Indeed, we used the tweets of the Twitter user [TopHashtags](https://twitter.com/TopHashtags). And as said previously, there are a few drawbacks and limitations to this method.
 
 Except this, the project has not been really limited by anything else.
 
@@ -140,4 +153,4 @@ Another possible improvement would be to merge the two scripts [process_tweets_d
 
 Also, the granularity of the data could be improved. Indeed, we only have the number of occurences of each hashtags per year. But, we could have the number of occurences per month or per day. This way, we could have a more precise representation of the evolution of the hashtags.
 
-And to finnish with the improvements, the UI could be a bit improved. For example, we could add a button to download the CSV file with the data of the plot or add more descriptions of each inputs.
+And to finish with the improvements, the UI could be a bit improved. For example, we could add a button to download the CSV file with the data of the plot or add more descriptions of each inputs.
